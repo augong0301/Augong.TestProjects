@@ -26,15 +26,9 @@ internal class Program
 		GC.WaitForPendingFinalizers();
 
 		Console.ReadLine();
-
-
 	}
 
-	private static void ReadData(Pipe pipe, DateTime now)
-	{
-		ReadDataAsync(pipe).GetAwaiter().GetResult();
-		Console.WriteLine($"All task done by {(DateTime.Now - now).TotalMilliseconds} ms");
-	}
+
 
 	private static void WriteData(Pipe pipe, int sizeKb, int iteration)
 	{
@@ -69,6 +63,12 @@ internal class Program
 			count++;
 		}
 		writer.Complete();
+	}
+
+	private static void ReadData(Pipe pipe, DateTime now)
+	{
+		ReadDataAsync(pipe).GetAwaiter().GetResult();
+		Console.WriteLine($"All task done by {(DateTime.Now - now).TotalMilliseconds} ms");
 	}
 
 	private static async Task ReadDataAsync(Pipe pipe)
