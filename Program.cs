@@ -9,9 +9,12 @@ internal class Program
 	private static void Main(string[] args)
 	{
 		var pipe = new Pipe();
+		int sizeKb = 1000;
+		int iteration = 1024 * 16;
+		Console.WriteLine($"byte array size of {sizeKb} Kb, iteration of {iteration}, total in {sizeKb * iteration / 1024} Mb");
 
 		DateTime now = DateTime.Now;
-		Thread writeThd = new Thread(new ThreadStart(() => WriteData(pipe)));
+		Thread writeThd = new Thread(new ThreadStart(() => WriteData(pipe, sizeKb, iteration)));
 		writeThd.Start();
 
 		Thread dataProcess = new Thread(new ThreadStart(() => ReadData(pipe, now)));
@@ -33,26 +36,26 @@ internal class Program
 		Console.WriteLine($"All task done by {(DateTime.Now - now).TotalMilliseconds} ms");
 	}
 
-	private static void WriteData(Pipe pipe)
+	private static void WriteData(Pipe pipe, int sizeKb, int iteration)
 	{
-		WriteDataAsync(pipe).GetAwaiter().GetResult();
+		WriteDataAsync(pipe, sizeKb, iteration).GetAwaiter().GetResult();
 	}
 
-	private static async Task WriteDataAsync(Pipe pipe)
+	private static async Task WriteDataAsync(Pipe pipe, int sizeKb, int iteradtion)
 	{
 		var writer = pipe.Writer;
-		var kilobyte = new byte[1024 * 16];
+		var kilobyte = new byte[1024 * sizeKb];
 		int length = kilobyte.Length;
 		// write length
 		BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(0, 4), length);
 
-		int iteration = 0;
-		while (iteration < 1024 * 64)
+		int count = 0;
+		while (count < iteradtion)
 		{
 			try
 			{
 				// write index 
-				BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(kilobyte.Length - 4, 4), iteration);
+				BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(kilobyte.Length - 4, 4), count);
 
 				await writer.WriteAsync(kilobyte);
 
@@ -63,14 +66,7 @@ internal class Program
 				break;
 			}
 
-			//FlushResult result = await writer.FlushAsync();
-
-			//if (result.IsCompleted)
-			//{
-			//	break;
-			//}
-
-			iteration++;
+			count++;
 		}
 		writer.Complete();
 	}
@@ -123,7 +119,7 @@ internal class Program
 		{
 			SequenceReader<byte> index = new SequenceReader<byte>(buffer.Slice(length - 4, 4));
 			index.TryReadLittleEndian(out int ind);
-			Console.WriteLine($"Read data index of {ind}");
+			//Console.WriteLine($"Read data index of {ind}");
 
 			pos = buffer.GetPosition(length);
 			buffer = buffer.Slice(length);
