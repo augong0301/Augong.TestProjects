@@ -27,7 +27,12 @@ namespace PipelineTest
 			await _pipe.Writer.WriteAsync(buffer);
 		}
 
-		public async Task<ReadOnlySequence<byte>> ReadBuffer()
+		public void CompleteWrite()
+		{
+			_pipe.Writer.Complete();
+		}
+
+		public async Task<ReadOnlySequence<byte>> ReadBufferAsync()
 		{
 			var result = await _pipe.Reader.ReadAsync();
 			IsCompleted = result.IsCompleted;
