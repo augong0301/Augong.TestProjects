@@ -6,77 +6,81 @@ using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 internal class Program
 {
-    private static void Main(string[] args)
-    {
-        var op = new PipeOptions(pauseWriterThreshold: 1024 * 1024 * 4 * 4, resumeWriterThreshold: 1024 * 1024 * 1 * 4);
-        var pipe = new Pipe(op);
-        int sizeKb = 1024 * 4;
-        int iteration = 1024;
-        var cts = new CancellationTokenSource();
-        var ct = cts.Token;
+	private static void Main(string[] args)
+	{
+		var op = new PipeOptions(pauseWriterThreshold: 1024 * 1024 * 4 * 4, resumeWriterThreshold: 1024 * 1024 * 1 * 4);
+		var pipe = new Pipe(op);
+		int sizeKb = 1024 * 4;
+		int iteration = 1024;
+		var cts = new CancellationTokenSource();
+		var ct = cts.Token;
 
-        Console.WriteLine($"byte array size of {sizeKb} Kb, iteration of {iteration}, total in {sizeKb * iteration / 1024} Mb");
+		Console.WriteLine($"byte array size of {sizeKb} Kb, iteration of {iteration}, total in {sizeKb * iteration / 1024} Mb");
 
-        DateTime now = DateTime.Now;
-        Thread writeThd = new Thread(new ThreadStart(() => WriteData(pipe, sizeKb, iteration, ct)));
-        writeThd.Start();
+		DateTime now = DateTime.Now;
+		Thread writeThd = new Thread(new ThreadStart(() => WriteData(pipe, sizeKb, iteration, ct)));
+		writeThd.Start();
 
-        Thread dataProcess = new Thread(new ThreadStart(() => ReadData(pipe, now, iteration)));
-        dataProcess.Start();
+		Thread dataProcess = new Thread(new ThreadStart(() => ReadData(pipe, now, iteration)));
+		dataProcess.Start();
 
-        if (Console.ReadLine() == string.Empty)
-        {
-            cts.Cancel();
-        }
+		if (Console.ReadLine() == string.Empty)
+		{
+			cts.Cancel();
+		}
 
-        GC.Collect(2);
+		GC.Collect(2);
 
-        GC.WaitForPendingFinalizers();
+		GC.WaitForPendingFinalizers();
 
-        Console.ReadLine();
-    }
+		Console.ReadLine();
+	}
 
 
 
-    private static void WriteData(Pipe pipe, int sizeKb, int iteration, CancellationToken ct)
-    {
-        WriteDataAsync(pipe, sizeKb, iteration, ct).GetAwaiter().GetResult();
-    }
+	private static void WriteData(Pipe pipe, int sizeKb, int iteration, CancellationToken ct)
+	{
+		WriteDataAsync(pipe, sizeKb, iteration, ct).GetAwaiter().GetResult();
+	}
 
-    private static async Task WriteDataAsync(Pipe pipe, int sizeKb, int iteradtion, CancellationToken ct)
-    {
-        var writer = pipe.Writer;
-        var kilobyte = new byte[1024 * sizeKb];
-        int length = kilobyte.Length;
-        // write length
-        BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(0, 4), length);
-        int count = 0;
+	private static async Task WriteDataAsync(Pipe pipe, int sizeKb, int iteradtion, CancellationToken ct)
+	{
+		var writer = pipe.Writer;
+		var kilobyte = new byte[1024 * sizeKb];
+		kilobyte[8] = 1;
+		kilobyte[10] = 2;
 
-        while (count < iteradtion)
-        {
-            if (ct.IsCancellationRequested)
-            {
-                Console.WriteLine($"Write data index of {count}");
+		int length = kilobyte.Length;
+		// write length
+		BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(0, 4), length);
+		int count = 0;
 
-                break;
-            }
-            try
-            {
-                var sw = new Stopwatch();
-                sw.Restart();
-                BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(4, 4), count);
+		while (count < iteradtion)
+		{
+			if (ct.IsCancellationRequested)
+			{
+				Console.WriteLine($"Write data index of {count}");
+
+				break;
+			}
+			try
+			{
+				var sw = new Stopwatch();
+				sw.Restart();
+				BinaryPrimitives.WriteInt32LittleEndian(kilobyte.AsSpan(4, 4), count);
 
 #if mem
-                var memory = writer.GetMemory(1024 * sizeKb);
-                kilobyte.CopyTo(memory);
-                writer.Advance(1024 * sizeKb);
-                await writer.FlushAsync();
-                sw.Stop();
-                Console.WriteLine($"write = {count}");
-                //Console.WriteLine($"Writing speed is  {sizeKb / sw.ElapsedMilliseconds * 1000 / 1024} MB/s");
+				var memory = writer.GetMemory(1024 * sizeKb);
+				kilobyte.CopyTo(memory);
+				writer.Advance(1024 * sizeKb);
+				await writer.FlushAsync();
+				sw.Stop();
+				Console.WriteLine($"write = {count}");
+				//Console.WriteLine($"Writing speed is  {sizeKb / sw.ElapsedMilliseconds * 1000 / 1024} MB/s");
 
 #else
 				sw.Start();
@@ -89,209 +93,220 @@ internal class Program
 				Console.WriteLine($"writeasync cost {sw.ElapsedTicks} ticks");
 #endif
 
-            }
-            catch (Exception ex)
-            {
+			}
+			catch (Exception ex)
+			{
 
-                break;
-            }
+				break;
+			}
 
-            count++;
-        }
-        writer.Complete();
-    }
+			count++;
+		}
+		writer.Complete();
+	}
 
-    private static void ReadData(Pipe pipe, DateTime now, int iteration)
-    {
-        ReadDataAsync(pipe).GetAwaiter().GetResult();
-        Console.WriteLine($"{iteration} tasks done by {(DateTime.Now - now).TotalMilliseconds} ms , average is {(DateTime.Now - now).TotalMilliseconds / iteration}");
-    }
+	private static void ReadData(Pipe pipe, DateTime now, int iteration)
+	{
+		ReadDataAsync(pipe).GetAwaiter().GetResult();
+		Console.WriteLine($"{iteration} tasks done by {(DateTime.Now - now).TotalMilliseconds} ms , average is {(DateTime.Now - now).TotalMilliseconds / iteration}");
+	}
 
-    private static async Task ReadDataAsync(Pipe pipe)
-    {
-        var reader = pipe.Reader;
-        var sw = new Stopwatch();
-        while (true)
-        {
-            sw.Restart();
-            var result = await reader.ReadAsync();
-            var buffer = result.Buffer;
-            SequencePosition consumed = buffer.Start;
-            SequencePosition examined = buffer.End;
-            if (result.IsCompleted && buffer.Length == 0)
-            {
-                break;
-            }
-            //do
-            //{
-            //bool readDone = GetPosition(ref buffer, ref pos, out var data);
-            //if (readDone && pos != null)
-            //{
-            //	ProcessData(data, pos.Value);
+	private static async Task ReadDataAsync(Pipe pipe)
+	{
+		var reader = pipe.Reader;
+		var sw = new Stopwatch();
+		while (true)
+		{
+			sw.Restart();
+			var result = await reader.ReadAsync();
+			var buffer = result.Buffer;
+			SequencePosition consumed = buffer.Start;
+			SequencePosition examined = buffer.End;
+			if (result.IsCompleted && buffer.Length == 0)
+			{
+				break;
+			}
+			//do
+			//{
+			//bool readDone = GetPosition(ref buffer, ref pos, out var data);
+			//if (readDone && pos != null)
+			//{
+			//	ProcessData(data, pos.Value);
 
-            //}
+			//}
 
-            //} while (pos != null);
+			//} while (pos != null);
 
-            try
-            {
-                Processbuffer(in buffer, out consumed, out examined, reader);
-            }
-            finally
-            {
-                reader.AdvanceTo(consumed);
-            }
-            sw.Stop();
-        }
-        reader.Complete();
-    }
+			try
+			{
+				Processbuffer(in buffer, out consumed, out examined, reader);
+			}
+			finally
+			{
+				reader.AdvanceTo(consumed);
+			}
+			sw.Stop();
+		}
+		reader.Complete();
+	}
 
-    private static void Processbuffer(in ReadOnlySequence<byte> buffer, out SequencePosition consumed, out SequencePosition examined, PipeReader reader)
-    {
-        consumed = buffer.Start;
-        examined = buffer.End;
-        int loc = 0;
+	private static void Processbuffer(in ReadOnlySequence<byte> buffer, out SequencePosition consumed, out SequencePosition examined, PipeReader reader)
+	{
+		consumed = buffer.Start;
+		examined = buffer.End;
+		int loc = 0;
 
-        var ms = MemoryPool<short>.Shared;
-
-
-        if (buffer.Length == 0)
-        {
-            return;
-        }
-
-        if (buffer.IsSingleSegment)
-        {
-            var span = buffer.FirstSpan;
-            using var mo = ms.Rent(1024 * 1024 * 5);
-            var shortArr = mo.Memory.Span;
-
-            ProcessData(in span, shortArr, loc);
-            // get buffer length
-            var lengthMem = span.Slice(0, 8);
-
-            int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
-            int index = BitConverter.ToInt32([lengthMem[4], lengthMem[5], lengthMem[6], lengthMem[7]], 0);
-            Console.WriteLine($"read index = {index}");
-
-            consumed = buffer.GetPosition(buffer.Length);
-
-            examined = consumed;
-        }
-        else
-        {
-            foreach (var seg in buffer)
-            {
-                using var mo = ms.Rent(1024 * 1024 * 10);
-                var shortArr = mo.Memory.Span;
-                var span = seg.Span;
-
-                var lengthMem = span.Slice(0, 8);
-
-                int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
-                int index = BitConverter.ToInt32([lengthMem[4], lengthMem[5], lengthMem[6], lengthMem[7]], 0);
-                Console.WriteLine($"read index = {index}");
-                ProcessData(in span, shortArr, loc);
-                loc += seg.Length;
-                consumed = buffer.GetPosition(seg.Length);
-            }
-
-        }
-    }
-
-    private static void ProcessData(in ReadOnlySpan<byte> span, Span<short> shortArr, int loc)
-    {
-        if (span.Length == 0)
-        {
-            return;
-        }
-
-        if (loc < 0 || loc + span.Length / 2 > shortArr.Length)
-        {
-            throw new ArgumentOutOfRangeException(nameof(loc), "The location is out of range.");
-        }
-
-        unsafe
-        {
-            fixed (byte* bytesss = &MemoryMarshal.GetReference(span))
-            fixed (short* shortPtr = &shortArr[loc])
-            {
-                short* shortArrPtr = shortPtr;
-                for (int i = 0; i < span.Length / 2; i++)
-                {
-                    shortArrPtr[i] = *(short*)(bytesss + i * 2);
-                }
-            }
-        }
-    }
+		var ms = MemoryPool<short>.Shared;
 
 
-    private static bool GetPosition(ref ReadOnlySequence<byte> buffer, ref SequencePosition? pos, out ReadOnlySequence<byte> data)
-    {
-        data = default;
+		if (buffer.Length == 0)
+		{
+			return;
+		}
 
-        #region MyRegion
-        pos = null;
-        if (buffer.Length < 4)
-        {
-            return false;
-        }
+		if (buffer.IsSingleSegment)
+		{
+			var span = buffer.FirstSpan;
+			using var mo = ms.Rent(1024 * 1024 * 5);
+			var shortArr = mo.Memory.Span;
 
-        SequenceReader<byte> reader = new SequenceReader<byte>(buffer.Slice(0, 4));
+			ProcessData(in span, shortArr, loc);
+			// get buffer length
+			var lengthMem = span.Slice(0, 8);
 
-        if (reader.TryReadLittleEndian(out int length))
-        {
-            SequenceReader<byte> index = new SequenceReader<byte>(buffer.Slice(length - 4, 4));
-            index.TryReadLittleEndian(out int ind);
-            //Console.WriteLine($"Read data index of {ind}");
+			int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
+			int index = BitConverter.ToInt32([lengthMem[4], lengthMem[5], lengthMem[6], lengthMem[7]], 0);
+			Console.WriteLine($"read index = {index}");
 
-            pos = buffer.GetPosition(length);
-            buffer = buffer.Slice(length);
-            return true;
-        }
+			consumed = buffer.GetPosition(buffer.Length);
 
-        return false;
-        #endregion
+			examined = consumed;
+		}
+		else
+		{
+			foreach (var seg in buffer)
+			{
+				using var mo = ms.Rent(1024 * 1024 * 4);
+				var shortArr = mo.Memory.Span;
+				var span = seg.Span;
+
+				var lengthMem = span.Slice(0, 8);
+				int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
+				int index = BitConverter.ToInt32([lengthMem[4], lengthMem[5], lengthMem[6], lengthMem[7]], 0);
+				Console.WriteLine($"read index = {index}");
+				ProcessData(in span, shortArr, loc);
+				MemoryMarshal.TryGetArray<short>(mo.Memory, out var segment);
+				//var sts = ToShortArray(shortArr);
+				ProcessShort(segment);
+				//loc += seg.Length;
+				consumed = buffer.GetPosition(seg.Length);
+			}
+
+		}
+	}
+
+	private static void ProcessShort(ArraySegment<short> shortArr)
+	{
+		//var data = shortArr.ToArray();
+		var data = new short[shortArr.Count];
+
+		Buffer.BlockCopy(shortArr.Array, 4, data, 0, shortArr.Count);
+		unsafe
+		{
+			fixed (short* src = data)
+			{
+
+			}
+		}
+	}
+
+	private static void ProcessData(in ReadOnlySpan<byte> span, Span<short> shortArr, int loc)
+	{
+		if (span.Length == 0)
+		{
+			return;
+		}
+		unsafe
+		{
+			fixed (byte* bytesss = &MemoryMarshal.GetReference(span))
+			fixed (short* shortPtr = &shortArr[0])
+			{
+				short* shortArrPtr = shortPtr;
+				for (int i = 0; i < span.Length / 2; i++)
+				{
+					shortArrPtr[i] = *(short*)(bytesss + 8 + i * 2);
+				}
+			}
+		}
+	}
 
 
-        //data = default;
-        //pos = null;
+	private static bool GetPosition(ref ReadOnlySequence<byte> buffer, ref SequencePosition? pos, out ReadOnlySequence<byte> data)
+	{
+		data = default;
 
-        //if (buffer.Length < 4)
-        //{
-        //	return false;
-        //}
+		#region MyRegion
+		pos = null;
+		if (buffer.Length < 4)
+		{
+			return false;
+		}
 
-        //var first = buffer.First.Span;
+		SequenceReader<byte> reader = new SequenceReader<byte>(buffer.Slice(0, 4));
 
-        //if (!BitConverter.IsLittleEndian)
-        //{
-        //	Array.Reverse(first.Slice(0, 4).ToArray());
-        //}
+		if (reader.TryReadLittleEndian(out int length))
+		{
+			SequenceReader<byte> index = new SequenceReader<byte>(buffer.Slice(length - 4, 4));
+			index.TryReadLittleEndian(out int ind);
+			//Console.WriteLine($"Read data index of {ind}");
 
-        //int length = BitConverter.ToInt32(first.Slice(0, 4).ToArray());
+			pos = buffer.GetPosition(length);
+			buffer = buffer.Slice(length);
+			return true;
+		}
 
-        //if (buffer.Length < length)
-        //{
-        //	return false;
-        //}
+		return false;
+		#endregion
 
-        //var slice = buffer.Slice(length - 4, 4);
-        //var sliceFirst = slice.First.Span;
-        ////Console.WriteLine($"{sliceFirst.ToArray()[0]} {sliceFirst.ToArray()[1]} {sliceFirst.ToArray()[2]} {sliceFirst.ToArray()[3]}");
-        //if (!BitConverter.IsLittleEndian)
-        //{
-        //	Array.Reverse(sliceFirst.ToArray());
-        //}
-        ////Console.WriteLine($"{sliceFirst.ToArray()[0]} {sliceFirst.ToArray()[1]} {sliceFirst.ToArray()[2]} {sliceFirst.ToArray()[3]}");
-        //int ind = BitConverter.ToInt32(sliceFirst.ToArray());
 
-        ////Console.WriteLine($"Read data index of {ind}");
+		//data = default;
+		//pos = null;
 
-        //pos = buffer.GetPosition(length);
-        //data = buffer.Slice(0, length);
-        //buffer = buffer.Slice(length);
+		//if (buffer.Length < 4)
+		//{
+		//	return false;
+		//}
 
-        //return true;
-    }
+		//var first = buffer.First.Span;
+
+		//if (!BitConverter.IsLittleEndian)
+		//{
+		//	Array.Reverse(first.Slice(0, 4).ToArray());
+		//}
+
+		//int length = BitConverter.ToInt32(first.Slice(0, 4).ToArray());
+
+		//if (buffer.Length < length)
+		//{
+		//	return false;
+		//}
+
+		//var slice = buffer.Slice(length - 4, 4);
+		//var sliceFirst = slice.First.Span;
+		////Console.WriteLine($"{sliceFirst.ToArray()[0]} {sliceFirst.ToArray()[1]} {sliceFirst.ToArray()[2]} {sliceFirst.ToArray()[3]}");
+		//if (!BitConverter.IsLittleEndian)
+		//{
+		//	Array.Reverse(sliceFirst.ToArray());
+		//}
+		////Console.WriteLine($"{sliceFirst.ToArray()[0]} {sliceFirst.ToArray()[1]} {sliceFirst.ToArray()[2]} {sliceFirst.ToArray()[3]}");
+		//int ind = BitConverter.ToInt32(sliceFirst.ToArray());
+
+		////Console.WriteLine($"Read data index of {ind}");
+
+		//pos = buffer.GetPosition(length);
+		//data = buffer.Slice(0, length);
+		//buffer = buffer.Slice(length);
+
+		//return true;
+	}
 }
