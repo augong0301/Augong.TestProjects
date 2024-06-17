@@ -2,6 +2,7 @@
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
@@ -11,6 +12,52 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 internal class Program
 {
 	private static void Main(string[] args)
+	{
+		DoMemTest();
+	}
+
+	private static void DoMemTest()
+	{
+
+
+		var dictionary = new ConcurrentDictionary<int, byte[]>();
+		for (int i = 0; i < 1024 * 5; i++)
+		{
+			var data = new byte[1024 * 1024];
+			dictionary.TryAdd(i, data);
+		}
+
+		for (int i = 0; i < 1024; i++)
+		{
+			dictionary.TryRemove(i, out _);
+		}
+
+
+		// 当引用结束时，largeData数组仍然存在，直到它不再被引用并被垃圾回收
+		Console.ReadKey();
+		dictionary.Clear();
+		dictionary = null;
+		dictionary = new ConcurrentDictionary<int, byte[]>();
+
+		//var origin = new Dictionary<int, byte[]>();
+		//for (int i = 0; i < 1024; i++)
+		//{
+		//	var data = new byte[1024 * 1024];
+		//	origin.TryAdd(i, data);
+		//}
+
+		//for (int i = 0; i < 1024; i++)
+		//{
+		//	origin.Remove(i, out _);
+		//}
+		//Console.ReadKey();
+		//origin.Clear();
+		Console.ReadKey();
+
+
+	}
+
+	private void DoTest()
 	{
 		var op = new PipeOptions(pauseWriterThreshold: 1024 * 1024 * 4 * 4, resumeWriterThreshold: 1024 * 1024 * 1 * 4);
 		var pipe = new Pipe(op);
@@ -39,8 +86,6 @@ internal class Program
 
 		Console.ReadLine();
 	}
-
-
 
 	private static void WriteData(Pipe pipe, int sizeKb, int iteration, CancellationToken ct)
 	{
