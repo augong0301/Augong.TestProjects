@@ -1,4 +1,5 @@
 ﻿#define mem
+using PipelineTest;
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -13,7 +14,8 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		DoMemTest();
+		var t = new ListMemTest();
+		t.DoTest();
 	}
 
 	private static void DoMemTest()
