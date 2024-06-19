@@ -1,4 +1,5 @@
 ﻿#define mem
+using BenchmarkDotNet.Running;
 using PipelineTest;
 using System;
 using System.Buffers;
@@ -14,7 +15,9 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
+		var test = new DictionaryTrimExcessTest();
 
+		var summary = BenchmarkRunner.Run<DictionaryTrimExcessTest>();
 	}
 
 	private static void DoMemTest()
