@@ -14,8 +14,7 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var t = new ListMemTest();
-		t.DoTest();
+
 	}
 
 	private static void DoMemTest()
@@ -59,11 +58,11 @@ internal class Program
 
 	}
 
-	private void DoTest()
+	private static void DoTest()
 	{
-		var op = new PipeOptions(pauseWriterThreshold: 1024 * 1024 * 4 * 4, resumeWriterThreshold: 1024 * 1024 * 1 * 4);
+		var op = new PipeOptions(pauseWriterThreshold: 1024 * 1024 * 4 * 100, resumeWriterThreshold: 1024 * 1024 * 200);
 		var pipe = new Pipe(op);
-		int sizeKb = 1024 * 4;
+		int sizeKb = 1024;
 		int iteration = 1024;
 		var cts = new CancellationTokenSource();
 		var ct = cts.Token;
@@ -190,7 +189,7 @@ internal class Program
 			}
 			finally
 			{
-				reader.AdvanceTo(consumed);
+				reader.AdvanceTo(buffer.End);
 			}
 			sw.Stop();
 		}
@@ -214,7 +213,7 @@ internal class Program
 		if (buffer.IsSingleSegment)
 		{
 			var span = buffer.FirstSpan;
-			using var mo = ms.Rent(1024 * 1024 * 5);
+			using var mo = ms.Rent(span.Length);
 			var shortArr = mo.Memory.Span;
 
 			ProcessData(in span, shortArr, loc);
@@ -233,9 +232,9 @@ internal class Program
 		{
 			foreach (var seg in buffer)
 			{
-				using var mo = ms.Rent(1024 * 1024 * 4);
-				var shortArr = mo.Memory.Span;
 				var span = seg.Span;
+				using var mo = ms.Rent(span.Length);
+				var shortArr = mo.Memory.Span;
 
 				var lengthMem = span.Slice(0, 8);
 				int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
@@ -273,6 +272,7 @@ internal class Program
 		{
 			return;
 		}
+
 		unsafe
 		{
 			fixed (byte* bytesss = &MemoryMarshal.GetReference(span))
