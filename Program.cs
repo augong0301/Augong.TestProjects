@@ -1,6 +1,7 @@
 ﻿#define mem
 using BenchmarkDotNet.Running;
 using PipelineTest;
+using PipelineTest.TestClass.Collections;
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -15,9 +16,9 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		//var summary = BenchmarkRunner.Run<BlockingCollectionTest>();
-		var test = new BlockingCollectionTest();
-		test.DoQueueTest();
+		var test = new DictionaryTest();
+		test.DoTest();
+
 	}
 
 	private static void DoMemTest()
@@ -61,9 +62,9 @@ internal class Program
 
 	}
 
-	private static void DoTest()
+	private static void DoTest(long pauseWriterThreshold, long resumeWriterThreshold, int minimumSegmentSize)
 	{
-		var op = new PipeOptions(pauseWriterThreshold: 1024 * 1024 * 4 * 100, resumeWriterThreshold: 1024 * 1024 * 200);
+		var op = new PipeOptions(pauseWriterThreshold: pauseWriterThreshold, resumeWriterThreshold: resumeWriterThreshold, minimumSegmentSize: minimumSegmentSize);
 		var pipe = new Pipe(op);
 		int sizeKb = 1024;
 		int iteration = 1024;
@@ -79,16 +80,6 @@ internal class Program
 		Thread dataProcess = new Thread(new ThreadStart(() => ReadData(pipe, now, iteration)));
 		dataProcess.Start();
 
-		if (Console.ReadLine() == string.Empty)
-		{
-			cts.Cancel();
-		}
-
-		GC.Collect(2);
-
-		GC.WaitForPendingFinalizers();
-
-		Console.ReadLine();
 	}
 
 	private static void WriteData(Pipe pipe, int sizeKb, int iteration, CancellationToken ct)
