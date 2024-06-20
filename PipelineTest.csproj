@@ -15,4 +15,9 @@
     <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestClass\ConcurrentCollections\" />
+    <Folder Include="TestClass\Collections\" />
+  </ItemGroup>
+
 </Project>
