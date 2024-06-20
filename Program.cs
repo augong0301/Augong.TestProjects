@@ -1,22 +1,17 @@
 ﻿#define mem
-using BenchmarkDotNet.Running;
 using PipelineTest;
-using PipelineTest.TestClass.Collections;
-using System;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var test = new DictionaryTest();
+		var test = new LinqTest();
 		test.DoTest();
 
 	}

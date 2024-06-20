@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace PipelineTest.TestClass.ConcurrentCollections
+namespace PipelineTest
 {
 	public class ConcurrentDictionaryTest : ITest
 	{
