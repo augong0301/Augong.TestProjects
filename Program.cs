@@ -15,9 +15,9 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var test = new DictionaryTrimExcessTest();
-
-		var summary = BenchmarkRunner.Run<DictionaryTrimExcessTest>();
+		//var summary = BenchmarkRunner.Run<BlockingCollectionTest>();
+		var test = new BlockingCollectionTest();
+		test.DoQueueTest();
 	}
 
 	private static void DoMemTest()
