@@ -1,6 +1,7 @@
 ﻿#define mem
 using Augong.CSharp;
 using Augong.CSharp.TestClass.Init;
+using Augong.CSharp.TestClass.Tasks;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
@@ -13,10 +14,8 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		//var c = new Example();
-		var cc = new Example(1);
-		//var cccc = new Example("sssss");
-		Console.ReadKey();
+		var ttest = new TimerTest();
+		ttest.DoTest();
 	}
 
 
