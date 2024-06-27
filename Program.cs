@@ -1,20 +1,25 @@
 ﻿#define mem
 using PipelineTest;
+using PipelineTest.TestClass.Init;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
+using System.Text;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var test = new LinqTest();
-		test.DoTest();
-
+		//var c = new Example();
+		var cc = new Example(1);
+		//var cccc = new Example("sssss");
+		Console.ReadKey();
 	}
+
+
 
 	private static void DoMemTest()
 	{
