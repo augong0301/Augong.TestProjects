@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace PipelineTest
+namespace Augong.CSharp
 {
 	public class ConcurrentDictionaryTest : ITest
 	{

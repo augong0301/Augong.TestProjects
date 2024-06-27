@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PipelineTest.TestClass.Init
+namespace Augong.CSharp.TestClass.Init
 {
 	using System;
 	using System.Runtime.InteropServices;

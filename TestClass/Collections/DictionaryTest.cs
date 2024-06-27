@@ -1,4 +1,4 @@
-﻿namespace PipelineTest
+﻿namespace Augong.CSharp
 {
 	public class DictionaryTest : ITest
 	{

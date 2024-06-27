@@ -2,7 +2,7 @@
 using System.IO.Compression;
 using System.Threading.Channels;
 
-namespace PipelineTest
+namespace Augong.CSharp
 {
 	public class StreamTest
 	{

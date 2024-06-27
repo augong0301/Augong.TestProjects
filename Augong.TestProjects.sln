@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipelineTest", "PipelineTest.csproj", "{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.CSharp", "Augong.CSharp.csproj", "{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

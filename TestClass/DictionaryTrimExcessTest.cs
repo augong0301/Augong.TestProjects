@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PipelineTest
+namespace Augong.CSharp
 {
 	[MemoryDiagnoser]
 	public class DictionaryTrimExcessTest

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PipelineTest
+namespace Augong.CSharp
 {
 	public class TriTest
 	{

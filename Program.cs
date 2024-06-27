@@ -1,6 +1,6 @@
 ﻿#define mem
-using PipelineTest;
-using PipelineTest.TestClass.Init;
+using Augong.CSharp;
+using Augong.CSharp.TestClass.Init;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
