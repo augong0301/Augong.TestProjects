@@ -14,7 +14,7 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var ttest = new TimerTest();
+		var ttest = new TaskTest();
 		ttest.DoTest();
 	}
 
