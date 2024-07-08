@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.CSharp", "Augong.CSharp.csproj", "{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.CSharp", "Augong.CSharp\Augong.CSharp.csproj", "{52E76A7F-DCC4-4EE5-8089-70520DDCA245}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.OpenCVTool", "..\Augong.OpenCV\Augong.OpenCVTool.csproj", "{9783C191-F0AA-4543-AFFA-DCD2F8604370}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.OpenCVTool", "Augong.OpenCV\Augong.OpenCVTool.csproj", "{4D62F688-F601-4041-A3E4-30E81BE79AB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVTool", "..\OpenCVTool\OpenCVTool.csproj", "{31B21A15-2178-4FDB-BE47-33D080C55244}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVTool", "OpenCVTool\OpenCVTool.csproj", "{909BCDAF-B8F7-4632-915F-52587986A2BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A7571E1-2B07-4889-BFF6-23A4ACC022E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9783C191-F0AA-4543-AFFA-DCD2F8604370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9783C191-F0AA-4543-AFFA-DCD2F8604370}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9783C191-F0AA-4543-AFFA-DCD2F8604370}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9783C191-F0AA-4543-AFFA-DCD2F8604370}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31B21A15-2178-4FDB-BE47-33D080C55244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31B21A15-2178-4FDB-BE47-33D080C55244}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31B21A15-2178-4FDB-BE47-33D080C55244}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31B21A15-2178-4FDB-BE47-33D080C55244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E76A7F-DCC4-4EE5-8089-70520DDCA245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E76A7F-DCC4-4EE5-8089-70520DDCA245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E76A7F-DCC4-4EE5-8089-70520DDCA245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E76A7F-DCC4-4EE5-8089-70520DDCA245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D62F688-F601-4041-A3E4-30E81BE79AB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D62F688-F601-4041-A3E4-30E81BE79AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D62F688-F601-4041-A3E4-30E81BE79AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D62F688-F601-4041-A3E4-30E81BE79AB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909BCDAF-B8F7-4632-915F-52587986A2BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909BCDAF-B8F7-4632-915F-52587986A2BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909BCDAF-B8F7-4632-915F-52587986A2BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909BCDAF-B8F7-4632-915F-52587986A2BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
