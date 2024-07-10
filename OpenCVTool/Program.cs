@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 class Program
 {
+	private static bool isMeanMode = false;
 	static void Main(string[] args)
 	{
 		Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "start merging");
@@ -24,7 +25,7 @@ class Program
 				string[] selChannels = new string[3];
 				double[] ratios = new double[3];
 
-				Console.WriteLine("Select merge mode : all ; selected channels (sc)");
+				Console.WriteLine("Select merge mode : all ; selected channels (sc) ; mean");
 				var mergeMode = Console.ReadLine().ToLower();
 				switch (mergeMode)
 				{
@@ -32,9 +33,16 @@ class Program
 						break;
 					case "selected channels":
 						ReadChannels(ref selChannels, ref ratios);
+						isMeanMode = false;
 						break;
 					case "sc":
 						ReadChannels(ref selChannels, ref ratios);
+						isMeanMode = false;
+						break;
+					case "mean":
+						selChannels = new string[3] { "ZrO2", "ScN", "ZcO2" };
+						ratios = new double[3] { 1, 1, 1 };
+						isMeanMode = true;
 						break;
 					default:
 						Console.WriteLine($"Unrecognized mode of {mergeMode}");
@@ -203,24 +211,69 @@ class Program
 				Mat gImage = ReadImageFromStream(gStream);
 				Mat rImage = ReadImageFromStream(rStream);
 
-				// Merge images to create a color image
-				Mat[] channelMats = new Mat[] { bImage * ratios[0], gImage * ratios[1], rImage * ratios[2] };
-				Mat colorImage = new Mat();
-				Cv2.Merge(channelMats, colorImage);
+				Mat dstB = new Mat(bImage.Size(), bImage.Type());
+				Mat dstG = new Mat(gImage.Size(), gImage.Type());
+
+				double mean, diffB, diffG = 0;
+				if (isMeanMode)
+				{
+					Scalar meanR = Cv2.Mean(rImage);
+					mean = meanR.Val0;
 
 
-				if (!Directory.Exists(Path.Combine(outputPath, compositeName)))
-				{
-					Directory.CreateDirectory(Path.Combine(outputPath, compositeName));
+					Scalar meanB = Cv2.Mean(bImage);
+					diffB = mean - meanB.Val0;
+
+					Cv2.Add(bImage, new Scalar(diffB), dstB);
+
+					Scalar meanG = Cv2.Mean(gImage);
+					diffG = mean - meanG.Val0;
+					Cv2.Add(gImage, new Scalar(diffG), dstG);
+
+					// Merge images to create a color image
+					Mat[] channelMats = new Mat[] { dstB, dstG, rImage };
+					Mat colorImage = new Mat();
+					Cv2.Merge(channelMats, colorImage);
+
+
+					if (!Directory.Exists(Path.Combine(outputPath, compositeName)))
+					{
+						Directory.CreateDirectory(Path.Combine(outputPath, compositeName));
+					}
+					// Save the merged image
+					string outputImagePath = Path.Combine(outputPath, compositeName, imageFileName);
+					finished++;
+					if (finished % 500 == 0)
+					{
+						Console.WriteLine($"Merged count = {finished}");
+					}
+					Cv2.ImWrite(outputImagePath, colorImage);
 				}
-				// Save the merged image
-				string outputImagePath = Path.Combine(outputPath, compositeName, imageFileName);
-				finished++;
-				if (finished % 500 == 0)
+				else
 				{
-					Console.WriteLine($"Merged count = {finished}");
+					// Merge images to create a color image
+					Mat[] channelMats = new Mat[] { bImage * ratios[0], gImage * ratios[1], rImage * ratios[2] };
+					Mat colorImage = new Mat();
+					Cv2.Merge(channelMats, colorImage);
+
+
+					if (!Directory.Exists(Path.Combine(outputPath, compositeName)))
+					{
+						Directory.CreateDirectory(Path.Combine(outputPath, compositeName));
+					}
+					// Save the merged image
+					string outputImagePath = Path.Combine(outputPath, compositeName, imageFileName);
+					finished++;
+					if (finished % 500 == 0)
+					{
+						Console.WriteLine($"Merged count = {finished}");
+					}
+					Cv2.ImWrite(outputImagePath, colorImage);
 				}
-				Cv2.ImWrite(outputImagePath, colorImage);
+
+
+
+
 			}
 		});
 	}
