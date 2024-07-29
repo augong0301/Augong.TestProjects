@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVTool", "OpenCVTool\Op
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.Enum", "Augong.Enum\Augong.Enum.csproj", "{0B52CE9E-D516-4EC8-8C0D-0B4FAFF035F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVDisplay", "OpenCVDisplay\OpenCVDisplay.csproj", "{4AA2D5AC-8471-4FEE-BA84-570164D8CD7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.OpenCVDisplay", "OpenCVDisplay\Augong.OpenCVDisplay.csproj", "{4AA2D5AC-8471-4FEE-BA84-570164D8CD7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.CSharp.Contract", "Augong.CSharp.Contract\Augong.CSharp.Contract.csproj", "{04A710AB-3DD5-4807-87AA-AE9C2750FA01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{4AA2D5AC-8471-4FEE-BA84-570164D8CD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AA2D5AC-8471-4FEE-BA84-570164D8CD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AA2D5AC-8471-4FEE-BA84-570164D8CD7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04A710AB-3DD5-4807-87AA-AE9C2750FA01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04A710AB-3DD5-4807-87AA-AE9C2750FA01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04A710AB-3DD5-4807-87AA-AE9C2750FA01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04A710AB-3DD5-4807-87AA-AE9C2750FA01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

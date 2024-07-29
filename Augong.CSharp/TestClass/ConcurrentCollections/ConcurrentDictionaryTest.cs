@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Augong.CSharp.Contract;
+using System.Collections.Concurrent;
 
 namespace Augong.CSharp
 {

@@ -1,17 +1,12 @@
-﻿using OpenCvSharp;
+﻿using Augong.OpenCVDisplay;
 
 internal class Program
 {
+	private static string Desktop => Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
 	private static void Main(string[] args)
 	{
-		var imgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.png");
-		var mat = Cv2.ImRead(imgPath, ImreadModes.AnyColor);
-
-		using (new Window("Image", mat))
-		{
-			Cv2.WaitKey();
-		}
-
-		Console.ReadKey();
+		var hist = new HistTest(Path.Combine(Desktop, "test.png"));
+		hist.DoTest();
 	}
 }
