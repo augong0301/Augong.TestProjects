@@ -2,6 +2,7 @@
 using Augong.CSharp;
 using Augong.CSharp.TestClass.Init;
 using Augong.CSharp.TestClass.Tasks;
+using System;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
@@ -14,8 +15,10 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var ttest = new TaskTest();
-		ttest.DoTest();
+		long mb = 1024 * 1024;
+		DoTest(1000 * mb, 1000 * mb);
+		Console.ReadKey();
+
 	}
 
 
@@ -61,9 +64,11 @@ internal class Program
 
 	}
 
-	private static void DoTest(long pauseWriterThreshold, long resumeWriterThreshold, int minimumSegmentSize)
+	private static void DoTest(long p = 1024 * 1024 * 10, long r = 1024 * 1024 * 5, int minimumSegmentSize = 1024 * 1024)
 	{
-		var op = new PipeOptions(pauseWriterThreshold: pauseWriterThreshold, resumeWriterThreshold: resumeWriterThreshold, minimumSegmentSize: minimumSegmentSize);
+		// 不用同步上下文
+		var op = new PipeOptions(pauseWriterThreshold: p, resumeWriterThreshold: r, minimumSegmentSize: minimumSegmentSize, useSynchronizationContext: false);
+		//var op = new PipeOptions(useSynchronizationContext: false);
 		var pipe = new Pipe(op);
 		int sizeKb = 1024;
 		int iteration = 1024;
@@ -76,7 +81,7 @@ internal class Program
 		Thread writeThd = new Thread(new ThreadStart(() => WriteData(pipe, sizeKb, iteration, ct)));
 		writeThd.Start();
 
-		Thread dataProcess = new Thread(new ThreadStart(() => ReadData(pipe, now, iteration)));
+		Thread dataProcess = new Thread(new ThreadStart(() => ReadData(pipe, now, iteration, p, r)));
 		dataProcess.Start();
 
 	}
@@ -118,7 +123,7 @@ internal class Program
 				writer.Advance(1024 * sizeKb);
 				await writer.FlushAsync();
 				sw.Stop();
-				Console.WriteLine($"write = {count}");
+				//Console.WriteLine($"write = {count}");
 				//Console.WriteLine($"Writing speed is  {sizeKb / sw.ElapsedMilliseconds * 1000 / 1024} MB/s");
 
 #else
@@ -144,10 +149,10 @@ internal class Program
 		writer.Complete();
 	}
 
-	private static void ReadData(Pipe pipe, DateTime now, int iteration)
+	private static void ReadData(Pipe pipe, DateTime now, int iteration, long p, long r)
 	{
 		ReadDataAsync(pipe).GetAwaiter().GetResult();
-		Console.WriteLine($"{iteration} tasks done by {(DateTime.Now - now).TotalMilliseconds} ms , average is {(DateTime.Now - now).TotalMilliseconds / iteration}");
+		Console.WriteLine($"{iteration} tasks of p:{p / 1024 / 1024} r:{r / 1024 / 1024} done by {(DateTime.Now - now).TotalMilliseconds} ms , average is {(DateTime.Now - now).TotalMilliseconds / iteration}");
 	}
 
 	private static async Task ReadDataAsync(Pipe pipe)
@@ -197,7 +202,7 @@ internal class Program
 
 		var ms = MemoryPool<short>.Shared;
 
-
+		//Thread.Sleep(1);
 		if (buffer.Length == 0)
 		{
 			return;
@@ -215,7 +220,7 @@ internal class Program
 
 			int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
 			int index = BitConverter.ToInt32([lengthMem[4], lengthMem[5], lengthMem[6], lengthMem[7]], 0);
-			Console.WriteLine($"read index = {index}");
+			//Console.WriteLine($"read index = {index}");
 
 			consumed = buffer.GetPosition(buffer.Length);
 
@@ -232,7 +237,7 @@ internal class Program
 				var lengthMem = span.Slice(0, 8);
 				int length = BitConverter.ToInt32([lengthMem[0], lengthMem[1], lengthMem[2], lengthMem[3]], 0);
 				int index = BitConverter.ToInt32([lengthMem[4], lengthMem[5], lengthMem[6], lengthMem[7]], 0);
-				Console.WriteLine($"read index = {index}");
+				//Console.WriteLine($"read index = {index}");
 				ProcessData(in span, shortArr, loc);
 				MemoryMarshal.TryGetArray<short>(mo.Memory, out var segment);
 				//var sts = ToShortArray(shortArr);
