@@ -1,5 +1,6 @@
 ﻿#define mem
 using Augong.CSharp;
+using Augong.CSharp.TestClass;
 using Augong.CSharp.TestClass.Init;
 using Augong.CSharp.TestClass.Tasks;
 using System;
@@ -15,10 +16,8 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		long mb = 1024 * 1024;
-		DoTest(1000 * mb, 1000 * mb);
-		Console.ReadKey();
-
+		var t = new RefReadonlyTest();
+		t.DoTest();
 	}
 
 

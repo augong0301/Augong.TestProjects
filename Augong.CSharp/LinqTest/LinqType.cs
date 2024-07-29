@@ -1,4 +1,6 @@
-﻿namespace Augong.CSharp
+﻿using Augong.CSharp.Contract;
+
+namespace Augong.CSharp
 {
 	public class LinqType
 	{
