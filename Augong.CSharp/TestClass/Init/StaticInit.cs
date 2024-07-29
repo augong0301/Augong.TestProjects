@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Augong.CSharp.TestClass.Init
 {
@@ -11,8 +7,6 @@ namespace Augong.CSharp.TestClass.Init
 
 	public class Example
 	{
-
-
 		private static readonly Encoding Jis8Encoding;
 		private static readonly Encoding GB2312Encoding;
 		private static readonly Encoding Big5Encoding;
