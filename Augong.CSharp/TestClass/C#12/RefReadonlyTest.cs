@@ -1,15 +1,10 @@
 ﻿using Augong.CSharp.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Augong.CSharp.TestClass
 {
-	// test for [in] and [ref readonly]
-	// https://learn.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-12#ref-readonly-parameters
-	public class RefReadonlyTest : ITest
+    // test for [in] and [ref readonly]
+    // https://learn.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-12#ref-readonly-parameters
+    public class RefReadonlyTest : ITest
 	{
 		public void DoTest()
 		{

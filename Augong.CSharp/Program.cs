@@ -16,7 +16,7 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var t = new RefReadonlyTest();
+		var t = new PipeCompleteTest();
 		t.DoTest();
 	}
 
@@ -66,7 +66,7 @@ internal class Program
 	private static void DoTest(long p = 1024 * 1024 * 10, long r = 1024 * 1024 * 5, int minimumSegmentSize = 1024 * 1024)
 	{
 		// 不用同步上下文
-		var op = new PipeOptions(pauseWriterThreshold: p, resumeWriterThreshold: r, minimumSegmentSize: minimumSegmentSize, useSynchronizationContext: false);
+		var op = new PipeOptions(pauseWriterThreshold: p, resumeWriterThreshold: r, minimumSegmentSize: minimumSegmentSize);
 		//var op = new PipeOptions(useSynchronizationContext: false);
 		var pipe = new Pipe(op);
 		int sizeKb = 1024;
