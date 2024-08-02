@@ -30,6 +30,4 @@ namespace Augong.UI
 		}
 
 	}
-
-
 }

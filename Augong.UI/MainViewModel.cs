@@ -182,9 +182,17 @@ namespace Augong.UI
 
 		private Action<Task> SaveData(int freq)
 		{
-			var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {SuccessCount / LoopCount * 100}%");
-			Record(SuccessCount, freq, folder);
-			pm.Stop(folder);
+			try
+			{
+				var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {SuccessCount / LoopCount * 100}%");
+				Record(SuccessCount, freq, folder);
+				pm.Stop(folder);
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
 			return null;
 		}
 
