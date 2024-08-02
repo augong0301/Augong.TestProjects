@@ -1,24 +1,18 @@
 ﻿#define mem
-using Augong.CSharp;
 using Augong.CSharp.Diagnostics;
-using Augong.CSharp.TestClass;
-using Augong.CSharp.TestClass.Init;
-using Augong.CSharp.TestClass.Tasks;
-using System;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
-using System.Text;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
 		var pm = new ProcessMonitor();
-		pm.DoMonitorOnAsync("GazerWaferIdRead");
+		pm.DoMonitorOnAsync("GazerWaferIdRead", 20);
 
 		if (Console.ReadKey().Key.ToString() != null)
 		{

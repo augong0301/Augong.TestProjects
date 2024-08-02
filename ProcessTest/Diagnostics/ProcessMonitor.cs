@@ -11,15 +11,15 @@ namespace Augong.CSharp.Diagnostics
 		float maxMem = float.MinValue;
 		private List<(float cpu, float mem)> records = new List<(float cpu, float mem)>();
 
-		public Task DoMonitorOnAsync(string processName)
+		public Task DoMonitorOnAsync(string processName, int interval)
 		{
 			return Task.Run(() =>
 			{
-				DoMonitorOn(processName);
+				DoMonitorOn(processName, interval);
 			});
 		}
 
-		public void DoMonitorOn(string processName)
+		public void DoMonitorOn(string processName, int interval)
 		{
 			cts = new CancellationTokenSource();
 
@@ -41,7 +41,7 @@ namespace Augong.CSharp.Diagnostics
 				PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
 
 				cpuCounter.NextValue();
-				Thread.Sleep(20);
+				Thread.Sleep(interval);
 				float cpuUsage = cpuCounter.NextValue() / Environment.ProcessorCount;
 				records.Add((cpuUsage, memoryUsage));
 
@@ -54,20 +54,23 @@ namespace Augong.CSharp.Diagnostics
 		}
 
 
-		public void Stop()
+		public void Stop(string folder = null)
 		{
 			cts.Cancel();
-			Record();
+			Record(folder);
 			cts.Dispose();
 		}
-		private void Record()
+		private void Record(string folder = null)
 		{
-			var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "GazerRecorder");
+			if (folder == null)
+			{
+				folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "GazerRecorder");
+			}
 			if (!Directory.Exists(folder))
 			{
 				Directory.CreateDirectory(folder);
 			}
-			var filePath = Path.Combine(folder, DateTime.Now.ToString("HH-mm-ss") + "Usage.txt");
+			var filePath = Path.Combine(folder, "Usage.txt");
 
 			using (var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))
 			{
