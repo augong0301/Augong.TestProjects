@@ -1,5 +1,6 @@
 ﻿#define mem
 using Augong.CSharp;
+using Augong.CSharp.Diagnostics;
 using Augong.CSharp.TestClass;
 using Augong.CSharp.TestClass.Init;
 using Augong.CSharp.TestClass.Tasks;
@@ -16,8 +17,13 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var t = new PipeCompleteTest();
-		t.DoTest();
+		var pm = new ProcessMonitor();
+		pm.DoMonitorOnAsync("GazerWaferIdRead");
+
+		if (Console.ReadKey().Key.ToString() != null)
+		{
+			pm.Stop();
+		}
 	}
 
 

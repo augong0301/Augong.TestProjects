@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Augong.CSharp.Contract\Augong.CSharp.Contract.csproj" />
+    <ProjectReference Include="..\ProcessTest\ProcessTest.csproj" />
   </ItemGroup>
 
 </Project>
