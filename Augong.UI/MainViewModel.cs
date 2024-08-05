@@ -51,6 +51,7 @@ namespace Augong.UI
 		}
 
 		private string _match = "PA0226231113-14";
+		//private string _match = "CN6N38301804";
 
 		public string Match
 		{
@@ -163,12 +164,12 @@ namespace Augong.UI
 						if (result.Contains(Match))
 						{
 							SuccessCount++;
-							string pattern = @"-?\d*\.\d+";
 
-							MatchCollection matches = Regex.Matches(result, pattern);
-							var score = double.Parse(matches[0].Value);
-							_scores.Add(score);
 						}
+						string pattern = @"-?\d*\.\d+";
+						MatchCollection matches = Regex.Matches(result, pattern);
+						var score = double.Parse(matches[0].Value);
+						_scores.Add(score);
 
 						Msg += result;
 						Msg += "\r\n";
@@ -186,18 +187,9 @@ namespace Augong.UI
 				if (task.Status == TaskStatus.RanToCompletion)
 				{
 					sw.Stop();
+					_results.Add($"Total cost time {sw.ElapsedMilliseconds} ms, average = {(double)sw.ElapsedMilliseconds / LoopCount} ms");
 					Debug.WriteLine($"Loop {LoopCount} cost {sw.ElapsedMilliseconds} ms");
 					SaveData(freq);
-				}
-				else if (task.Status == TaskStatus.Faulted)
-				{
-					// 处理错误
-					Console.WriteLine("任务执行出错: " + task.Exception);
-				}
-				else if (task.Status == TaskStatus.Canceled)
-				{
-					// 处理取消
-					Console.WriteLine("任务已取消");
 				}
 				CalculateAverageScore();
 			});
@@ -219,7 +211,7 @@ namespace Augong.UI
 			}
 			catch (Exception ex)
 			{
-				throw;
+				return null;
 			}
 			return null;
 		}

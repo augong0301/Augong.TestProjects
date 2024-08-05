@@ -49,7 +49,7 @@
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
 			<TextBox Text="{Binding Match}" Grid.Row="0"   Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			<TextBlock Text="{Binding Average}" Grid.Row="1"  Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding Average,UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"  Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 			<Button Content="GetAverage" Command="{Binding  GetAverageCommand}" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 		</Grid>
