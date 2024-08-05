@@ -2,6 +2,10 @@
 using Augong.Math;
 using Augong.Util;
 using Microsoft.Win32;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.ImageSharp;
+using OxyPlot.Series;
 using SocketTest;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,7 +13,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Augong.UI
@@ -271,11 +274,132 @@ namespace Augong.UI
 
 		private ICommand _GetAverageCommand;
 		public ICommand GetAverageCommand => _GetAverageCommand ??
-			(_GetAverageCommand = new RelayCommand((o) => GetAverage()));
+			(_GetAverageCommand = new RelayCommand((o) => ExportUsageHist()));
 
-		private void GetAverage()
+
+		private void ExportUsageHist()
 		{
+			// Define the file paths
+			var sd = new OpenFileDialog();
+			sd.FileName = "Documents";
+			sd.DefaultExt = ".txt";
+			sd.Filter = "Text documents (.txt)|*.txt";
+			var rs = sd.ShowDialog();
+			if (rs == true)
+			{
+				_txtPath = sd.FileName;
+			}
 
+			var reader = new TxTReader(_txtPath);
+
+			// Read CPU usage data from the file
+			var cpuPercentages = reader.GetAllDouble(_txtPath);
+
+			// Create a plot model
+			var plotModel = new PlotModel { Title = "CPU Usage" };
+
+			var histogramData = GenerateHistogramData(cpuPercentages, 100);
+
+			// Create a bar series
+			var barSeries = new BarSeries
+			{
+				Title = "CPU %",
+				FillColor = OxyColors.SkyBlue
+			};
+
+			// Add data points to the bar series
+			foreach (var data in histogramData)
+			{
+				barSeries.Items.Add(new BarItem { Value = data });
+			}
+
+			// Add axes
+			plotModel.Axes.Add(new LinearAxis
+			{
+				Position = AxisPosition.Bottom,
+				Title = "Frequency"
+			});
+			plotModel.Axes.Add(new CategoryAxis
+			{
+				Position = AxisPosition.Left,
+				Key = "CategoryAxis",
+				Title = "CPU % Range"
+			});
+			plotModel.Background = OxyColors.White;
+
+			// Add the bar series to the plot model
+			plotModel.Series.Add(barSeries);
+
+
+			string outputFilePath = Directory.GetParent(_txtPath).FullName;
+
+			ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
+		}
+		private void ExportUsage()
+		{
+			// Define the file paths
+			var sd = new OpenFileDialog();
+			sd.FileName = "Documents";
+			sd.DefaultExt = ".txt";
+			sd.Filter = "Text documents (.txt)|*.txt";
+			var rs = sd.ShowDialog();
+			if (rs == true)
+			{
+				_txtPath = sd.FileName;
+			}
+
+			var reader = new TxTReader(_txtPath);
+
+			// Read CPU usage data from the file
+			var cpuPercentages = reader.GetAllDouble(_txtPath);
+
+			// Create a plot model
+			var plotModel = new PlotModel { Title = "CPU Usage" };
+
+			// Create a line series
+			var lineSeries = new LineSeries
+			{
+				Title = "CPU %",
+				MarkerType = MarkerType.Circle,
+				MarkerSize = 4,
+				MarkerStroke = OxyColors.White
+			};
+
+			// Add data points to the line series
+			for (int i = 0; i < cpuPercentages.Count; i++)
+			{
+				lineSeries.Points.Add(new DataPoint(i, cpuPercentages[i]));
+			}
+
+			// Add the line series to the plot model
+			plotModel.Series.Add(lineSeries);
+			string outputFilePath = Directory.GetParent(_txtPath).FullName;
+
+			// Export the plot model to a PNG file
+			ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
+		}
+
+		private void ExportToPng(PlotModel plotModel, string outputFilePath)
+		{
+			PngExporter.Export(plotModel, outputFilePath, 1920, 1280);
+		}
+
+		private List<double> GenerateHistogramData(List<double> data, int binCount)
+		{
+			var max = data.Max();
+			var min = data.Min();
+			var range = max - min;
+			var binSize = range / binCount;
+
+			var bins = new double[binCount];
+			foreach (var value in data)
+			{
+				var binIndex = (int)((value - min) / binSize);
+				if (binIndex == binCount) binIndex--; // Handle edge case where value == max
+				bins[binIndex]++;
+			}
+
+			return new List<double>(bins);
 		}
 
 		private ICommand _SendCommand;

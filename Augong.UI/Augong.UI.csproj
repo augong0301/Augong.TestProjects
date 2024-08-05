@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.ImageSharp" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Augong,Math\Augong.Math.csproj" />
     <ProjectReference Include="..\Augong.Util\Augong.Util.csproj" />
     <ProjectReference Include="..\ProcessTest\ProcessTest.csproj" />
