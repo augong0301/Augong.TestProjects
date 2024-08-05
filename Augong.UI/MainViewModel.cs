@@ -1,5 +1,6 @@
 ﻿using Augong.CSharp.Diagnostics;
 using Augong.Math;
+using Augong.Util;
 using Microsoft.Win32;
 using SocketTest;
 using System.ComponentModel;
@@ -166,8 +167,7 @@ namespace Augong.UI
 							SuccessCount++;
 
 						}
-						string pattern = @"-?\d*\.\d+";
-						MatchCollection matches = Regex.Matches(result, pattern);
+						MatchCollection matches = Regex.Matches(result, Const.DoubleRegex);
 						var score = double.Parse(matches[0].Value);
 						_scores.Add(score);
 
@@ -205,7 +205,7 @@ namespace Augong.UI
 		{
 			try
 			{
-				var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
+				var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Const.OCRFolder, DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
 				Record(SuccessCount, freq, folder);
 				pm.Stop(folder);
 			}
