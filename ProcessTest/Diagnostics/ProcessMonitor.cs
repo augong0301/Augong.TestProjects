@@ -3,23 +3,22 @@ using System.Text;
 
 namespace Augong.CSharp.Diagnostics
 {
-	public class ProcessMonitor
+	public class ProcessMonitor(string processName)
 	{
-
 		private CancellationTokenSource cts;
 		float maxCpu = float.MinValue;
 		float maxMem = float.MinValue;
 		private List<(float cpu, float mem)> records = new List<(float cpu, float mem)>();
 
-		public Task DoMonitorOnAsync(string processName, int interval)
+		public Task DoMonitorOnAsync(int interval)
 		{
 			return Task.Run(() =>
 			{
-				DoMonitorOn(processName, interval);
+				DoMonitorOn(interval);
 			});
 		}
 
-		public void DoMonitorOn(string processName, int interval)
+		public void DoMonitorOn(int interval)
 		{
 			cts = new CancellationTokenSource();
 
@@ -53,13 +52,24 @@ namespace Augong.CSharp.Diagnostics
 			records.Add((maxCpu, maxMem));
 		}
 
-
 		public void Stop(string folder = null)
 		{
 			cts.Cancel();
 			Record(folder);
 			cts.Dispose();
 		}
+
+		public string GetProcessRoot()
+		{
+			var proc = Process.GetProcessesByName(processName);
+			if (proc?.Length != 0)
+			{
+				var exePath = proc[0].MainModule.FileName;
+				return Directory.GetParent(exePath).FullName;
+			}
+			return null;
+		}
+
 		private void Record(string folder = null)
 		{
 			if (folder == null)
@@ -80,7 +90,7 @@ namespace Augong.CSharp.Diagnostics
 					{
 						sw.WriteLine($"CPU : {r.cpu}%, Memory {r.mem / 1024} KB");
 					}
-					sw.WriteLine($"CPU max: {maxCpu}%, Memory max {maxMem/1024} KB");
+					sw.WriteLine($"CPU max: {maxCpu}%, Memory max {maxMem / 1024} KB");
 
 				}
 			}

@@ -9,6 +9,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Augong.UI
@@ -101,15 +102,26 @@ namespace Augong.UI
 			set { _avereage = value; this.NotifyChanged(); }
 		}
 
+		private string _Signals;
+
+		public string Signals
+		{
+			get { return _Signals; }
+			set { _Signals = value; this.NotifyChanged(); }
+		}
+
 
 		#endregion
 
 		private TestClient _client;
-		private ProcessMonitor pm = new ProcessMonitor();
-		private List<string> _results;
+		private ProcessMonitor pm;
+
+		private string _currentResultFolder;
+		private List<string> _results = new List<string>();
 		private List<double> _scores;
 		private List<(float, float)> _records = new List<(float, float)>();
 		private CancellationTokenSource cts = new CancellationTokenSource();
+		private ImageFileHelper _imageFileHelper;
 
 		public MainViewModel()
 		{
@@ -141,18 +153,25 @@ namespace Augong.UI
 
 		private void DoLoop()
 		{
-			var sw = Stopwatch.StartNew();
 			int freq = 10;
+			var sw = Stopwatch.StartNew();
+			var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Const.OCRFolder, DateTime.Now.ToString("HH-mm-ss"));
+			Setup(folder, LoopCount, freq);
+
+			pm = new ProcessMonitor("GazerWaferIdRead");
 			Task.Run(() =>
 			{
-				pm.DoMonitorOn("GazerWaferIdRead", freq);
+				pm.DoMonitorOn(freq);
 			});
+			var root = pm.GetProcessRoot();
+			_imageFileHelper = new ImageFileHelper(Path.Combine(root, "OK"));
 
 			SuccessCount = 0;
 			cts = new CancellationTokenSource();
 			Msg = "Start";
 			_results.Clear();
 			_scores = new List<double>();
+
 			Task.Run(() =>
 			{
 				for (int i = 0; i < LoopCount && !cts.IsCancellationRequested; i++)
@@ -165,7 +184,6 @@ namespace Augong.UI
 						if (result.Contains(Match))
 						{
 							SuccessCount++;
-
 						}
 						MatchCollection matches = Regex.Matches(result, Const.DoubleRegex);
 						var score = double.Parse(matches[0].Value);
@@ -173,6 +191,7 @@ namespace Augong.UI
 
 						Msg += result;
 						Msg += "\r\n";
+						_imageFileHelper.CopyAllFilesTo(_currentResultFolder);
 					}
 					catch (Exception ex)
 					{
@@ -188,6 +207,7 @@ namespace Augong.UI
 				{
 					sw.Stop();
 					_results.Add($"Total cost time {sw.ElapsedMilliseconds} ms, average = {(double)sw.ElapsedMilliseconds / LoopCount} ms");
+					_results.Add($"Task Done Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
 					Debug.WriteLine($"Loop {LoopCount} cost {sw.ElapsedMilliseconds} ms");
 					SaveData(freq);
 				}
@@ -205,9 +225,8 @@ namespace Augong.UI
 		{
 			try
 			{
-				var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Const.OCRFolder, DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
-				Record(SuccessCount, freq, folder);
-				pm.Stop(folder);
+				Record(SuccessCount, freq);
+				pm.Stop(_currentResultFolder);
 			}
 			catch (Exception ex)
 			{
@@ -248,10 +267,7 @@ namespace Augong.UI
 
 			var reader = new TxTReader(_txtPath);
 			Average = reader.Average();
-
 		}
-
-
 
 		private ICommand _GetAverageCommand;
 		public ICommand GetAverageCommand => _GetAverageCommand ??
@@ -262,19 +278,48 @@ namespace Augong.UI
 
 		}
 
+		private ICommand _SendCommand;
+		public ICommand SendCommand => _SendCommand ??
+			(_SendCommand = new RelayCommand((o) => SendToServer()));
+
+		private void SendToServer()
+		{
+			try
+			{
+				if (Signals != null)
+				{
+					Msg = _client.SendAndGetBytes(Signals);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+
 		#endregion
 
-		private void Record(int succ, int freq, string folder = null)
+		private void Setup(string folder, int count, int freq)
+		{
+			_currentResultFolder = SetupFolder(folder, count, freq);
+		}
+
+		private string SetupFolder(string folder, int count, int freq)
 		{
 			if (folder == null)
 			{
-				folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Succ {succ} freq {freq}");
+				folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Count {count} freq {freq}");
 			}
 			if (!Directory.Exists(folder))
 			{
 				Directory.CreateDirectory(folder);
 			}
-			var filePath = Path.Combine(folder, "OcrResult.txt");
+			return folder;
+		}
+
+		private void Record(int succ, int freq)
+		{
+			var filePath = Path.Combine(_currentResultFolder, "OcrResult.txt");
 
 			using (var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))
 			{

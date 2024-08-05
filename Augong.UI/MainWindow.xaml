@@ -6,6 +6,16 @@
         xmlns:local="clr-namespace:Augong.UI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+	<Window.Resources>
+		<Style TargetType="TextBox">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+		<Style TargetType="TextBlock">
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+	</Window.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="100"/>
@@ -21,14 +31,14 @@
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<TextBlock Text="IP" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding IP}" Width="100" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="Address" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding Port}" Width="100"  Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="LoopCount" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding LoopCount}" Width="100"  Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="SuccessCount" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="{Binding SuccessCount}" Width="50"  Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<TextBlock Text="IP" />
+		<TextBox Text="{Binding IP}" Width="100" Grid.Column="1" />
+		<TextBlock Text="Address" Grid.Row="1" />
+		<TextBox Text="{Binding Port}" Width="100"  Grid.Row="1" Grid.Column="1"  />
+		<TextBlock Text="LoopCount" Grid.Row="2" />
+		<TextBox Text="{Binding LoopCount}" Width="100"  Grid.Row="2" Grid.Column="1"  />
+		<TextBlock Text="SuccessCount" Grid.Row="3" />
+		<TextBlock Text="{Binding SuccessCount}" Width="50"  Grid.Row="3" Grid.Column="1"  />
 		<Grid Grid.Row="4">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="50"/>
@@ -36,9 +46,9 @@
 				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
-			<TextBlock Text="Match" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			<TextBlock Text="Average" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			<Button Content="SelectTxT" Command="{Binding  SelectFileCommand}" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<TextBlock Text="Match" Grid.Row="0"  />
+			<TextBlock Text="Average" Grid.Row="1"  />
+			<Button Content="SelectTxT" Command="{Binding  SelectFileCommand}" Grid.Row="2" Grid.Column="0"  />
 
 		</Grid>
 		<Grid Grid.Row="4" Grid.Column="1">
@@ -48,17 +58,18 @@
 				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
-			<TextBox Text="{Binding Match}" Grid.Row="0"   Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			<TextBlock Text="{Binding Average,UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"  Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-			<Button Content="GetAverage" Command="{Binding  GetAverageCommand}" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+			<TextBox Text="{Binding Match}" Grid.Row="0"   Width="150" />
+			<TextBlock Text="{Binding Average,UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"  Width="150" />
+			<Button Content="GetAverage" Command="{Binding  GetAverageCommand}" Grid.Row="2" Grid.Column="0"  />
 		</Grid>
 
-		<Button Content="Connect" Command="{Binding  DoConnectCommand}" Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="{Binding IsConnect}" Margin="5,0,5,0" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<Button Content="Cancel" Command="{Binding  CancelCommand}" Grid.Row="0" Grid.Column="4"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<Button Content="Loop" Command="{Binding  DoLoopCommand}" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-		<TextBlock Text="{Binding Msg}" Grid.Row="4" Grid.Column="3"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<Button Content="Connect" Command="{Binding  DoConnectCommand}" Grid.Row="0" Grid.Column="2"  />
+		<TextBlock Text="{Binding IsConnect}" Margin="5,0,5,0" Grid.Row="0" Grid.Column="3" />
+		<Button Content="Cancel" Command="{Binding  CancelCommand}" Grid.Row="0" Grid.Column="4"  />
+		<Button Content="Loop" Command="{Binding  DoLoopCommand}" Grid.Row="1" Grid.Column="2"  />
+		<TextBox Text="Send Command" Grid.Row="2" Grid.Column="2"/>
+		<TextBlock Text="{Binding Commands,UpdateSourceTrigger=PropertyChanged}" MinWidth="50" Grid.Row="2" Grid.Column="3"/>
+		<Button Content="Send" Grid.Row="2" Grid.Column="4" Command="{Binding SendCommand}"/>
+		<TextBlock Text="{Binding Msg}" Grid.Row="4" Grid.Column="3"  />
 	</Grid>
 </Window>

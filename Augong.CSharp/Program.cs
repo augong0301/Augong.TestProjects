@@ -11,8 +11,8 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var pm = new ProcessMonitor();
-		pm.DoMonitorOnAsync("GazerWaferIdRead", 20);
+		var pm = new ProcessMonitor("GazerWaferIdRead");
+		pm.DoMonitorOnAsync(20);
 
 		if (Console.ReadKey().Key.ToString() != null)
 		{
