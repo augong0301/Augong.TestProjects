@@ -10,7 +10,8 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="100"/>
 			<ColumnDefinition Width="200"/>
-			<ColumnDefinition Width="100"/>
+			<ColumnDefinition Width="auto"/>
+			<ColumnDefinition Width="auto"/>
 			<ColumnDefinition Width="auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
@@ -28,12 +29,34 @@
 		<TextBox Text="{Binding LoopCount}" Width="100"  Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
 		<TextBlock Text="SuccessCount" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 		<TextBlock Text="{Binding SuccessCount}" Width="50"  Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="Match" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding Match}" Width="150"  Grid.Row="4" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<Button Content="Connect" Command="{Binding  DoConnectCommand}" Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<TextBlock Text="{Binding IsConnect}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-		<Button Content="Cancel" Command="{Binding  CancelCommand}" Grid.Row="0" Grid.Column="3"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<Grid Grid.Row="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+			<TextBlock Text="Match" Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<TextBlock Text="Average" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<Button Content="SelectTxT" Command="{Binding  SelectFileCommand}" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
+		</Grid>
+		<Grid Grid.Row="4" Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+			<TextBox Text="{Binding Match}" Grid.Row="0"   Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding Average}" Grid.Row="1"  Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<Button Content="GetAverage" Command="{Binding  GetAverageCommand}" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+		</Grid>
+
+		<Button Content="Connect" Command="{Binding  DoConnectCommand}" Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<TextBlock Text="{Binding IsConnect}" Margin="5,0,5,0" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<Button Content="Cancel" Command="{Binding  CancelCommand}" Grid.Row="0" Grid.Column="4"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
 		<Button Content="Loop" Command="{Binding  DoLoopCommand}" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 		<TextBlock Text="{Binding Msg}" Grid.Row="4" Grid.Column="3"  HorizontalAlignment="Center" VerticalAlignment="Center"/>

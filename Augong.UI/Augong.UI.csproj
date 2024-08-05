@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Augong,Math\Augong.Math.csproj" />
     <ProjectReference Include="..\ProcessTest\ProcessTest.csproj" />
     <ProjectReference Include="..\SocketTest\SocketTest.csproj" />
   </ItemGroup>

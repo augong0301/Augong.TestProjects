@@ -1,15 +1,13 @@
 ﻿using Augong.CSharp.Diagnostics;
+using Augong.Math;
+using Microsoft.Win32;
 using SocketTest;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace Augong.UI
@@ -93,6 +91,13 @@ namespace Augong.UI
 			set { _isConnect = value; this.NotifyChanged(); }
 		}
 
+		private double _avereage;
+
+		public double Average
+		{
+			get { return _avereage; }
+			set { _avereage = value; this.NotifyChanged(); }
+		}
 
 
 		#endregion
@@ -100,6 +105,7 @@ namespace Augong.UI
 		private TestClient _client;
 		private ProcessMonitor pm = new ProcessMonitor();
 		private List<string> _results;
+		private List<double> _scores;
 		private List<(float, float)> _records = new List<(float, float)>();
 		private CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -144,26 +150,43 @@ namespace Augong.UI
 			cts = new CancellationTokenSource();
 			Msg = "Start";
 			_results.Clear();
+			_scores = new List<double>();
 			Task.Run(() =>
 			{
 				for (int i = 0; i < LoopCount && !cts.IsCancellationRequested; i++)
 				{
-					var result = _client.SendAndGetBytes("T");
-					result = result.Replace("\0", "");
-					_results.Add(result);
-					if (result.Contains(Match))
+					try
 					{
-						SuccessCount++;
+						var result = _client.SendAndGetBytes("T");
+						result = result.Replace("\0", "");
+						_results.Add(result);
+						if (result.Contains(Match))
+						{
+							SuccessCount++;
+							string pattern = @"-?\d*\.\d+";
+
+							MatchCollection matches = Regex.Matches(result, pattern);
+							var score = double.Parse(matches[0].Value);
+							_scores.Add(score);
+						}
+
+						Msg += result;
+						Msg += "\r\n";
+					}
+					catch (Exception ex)
+					{
+						Debug.WriteLine($"exception in OCR result {ex.Message}");
+						continue;
 					}
 
-					Msg += result;
-					Msg += "\r\n";
 				}
 			}).ContinueWith(task =>
 			{
 				// 确保任务成功完成后才调用 SaveData
 				if (task.Status == TaskStatus.RanToCompletion)
 				{
+					sw.Stop();
+					Debug.WriteLine($"Loop {LoopCount} cost {sw.ElapsedMilliseconds} ms");
 					SaveData(freq);
 				}
 				else if (task.Status == TaskStatus.Faulted)
@@ -176,21 +199,26 @@ namespace Augong.UI
 					// 处理取消
 					Console.WriteLine("任务已取消");
 				}
+				CalculateAverageScore();
 			});
 
+		}
+
+		private void CalculateAverageScore()
+		{
+			Average = _scores.Average();
 		}
 
 		private Action<Task> SaveData(int freq)
 		{
 			try
 			{
-				var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {SuccessCount / LoopCount * 100}%");
+				var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
 				Record(SuccessCount, freq, folder);
 				pm.Stop(folder);
 			}
 			catch (Exception ex)
 			{
-
 				throw;
 			}
 			return null;
@@ -203,6 +231,43 @@ namespace Augong.UI
 		private void Cancel()
 		{
 			cts.Cancel();
+		}
+
+		List<string> txtScores = new List<string>();
+		string _txtPath;
+		private ICommand _SelectFileCommand;
+		public ICommand SelectFileCommand => _SelectFileCommand ??
+			(_SelectFileCommand = new RelayCommand((o) => SelectFile()));
+
+		private void SelectFile()
+		{
+			txtScores.Clear();
+			var sd = new OpenFileDialog();
+			sd.FileName = "Documents";
+			sd.DefaultExt = ".txt";
+			sd.Filter = "Text documents (.txt)|*.txt";
+			var rs = sd.ShowDialog();
+
+			_txtPath = string.Empty;
+			if (rs == true)
+			{
+				_txtPath = sd.FileName;
+			}
+
+			var reader = new TxTReader(_txtPath);
+			Average = reader.Average();
+
+		}
+
+
+
+		private ICommand _GetAverageCommand;
+		public ICommand GetAverageCommand => _GetAverageCommand ??
+			(_GetAverageCommand = new RelayCommand((o) => GetAverage()));
+
+		private void GetAverage()
+		{
+
 		}
 
 		#endregion

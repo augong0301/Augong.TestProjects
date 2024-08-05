@@ -80,7 +80,7 @@ namespace Augong.CSharp.Diagnostics
 					{
 						sw.WriteLine($"CPU : {r.cpu}%, Memory {r.mem / 1024} KB");
 					}
-					sw.WriteLine($"CPU max: {maxCpu}%, Memory max {maxMem} KB");
+					sw.WriteLine($"CPU max: {maxCpu}%, Memory max {maxMem/1024} KB");
 
 				}
 			}
