@@ -1,7 +1,7 @@
 ﻿using Augong.CSharp.Contract;
 using System.Collections.Concurrent;
 
-namespace Augong.CSharp
+namespace Augong.CSharp.ConsoleApp.TestClass.ConcurrentCollections
 {
 	public class ConcurrentDictionaryTest : ITest
 	{

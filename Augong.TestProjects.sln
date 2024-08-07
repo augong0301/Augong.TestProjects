@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.CSharp.Console", "Augong.CSharp\Augong.CSharp.Console.csproj", "{52E76A7F-DCC4-4EE5-8089-70520DDCA245}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.CSharp.ConsoleApp", "Augong.CSharp\Augong.CSharp.ConsoleApp.csproj", "{52E76A7F-DCC4-4EE5-8089-70520DDCA245}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.OpenCVTool", "Augong.OpenCV\Augong.OpenCVTool.csproj", "{4D62F688-F601-4041-A3E4-30E81BE79AB0}"
 EndProject
@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketTest", "SocketTest\So
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.UI", "Augong.UI\Augong.UI.csproj", "{F7CF8745-E9AC-4222-B9A8-8C62573B9DCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.Math", "Augong,Math\Augong.Math.csproj", "{C713C533-C0C5-46C9-817A-585FC6C91A87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.Math", "Augong,Math\Augong.Math.csproj", "{C713C533-C0C5-46C9-817A-585FC6C91A87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.Util", "Augong.Util\Augong.Util.csproj", "{8EC2F78B-B7C1-49F8-B146-4C1CF46FEB7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.Util", "Augong.Util\Augong.Util.csproj", "{8EC2F78B-B7C1-49F8-B146-4C1CF46FEB7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

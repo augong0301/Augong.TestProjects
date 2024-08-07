@@ -2,7 +2,7 @@
 using System.IO.Compression;
 using System.Threading.Channels;
 
-namespace Augong.CSharp
+namespace Augong.CSharp.ConsoleApp.TestClass
 {
 	public class StreamTest
 	{

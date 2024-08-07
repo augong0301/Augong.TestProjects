@@ -1,6 +1,6 @@
 ﻿using Augong.CSharp.Contract;
 
-namespace Augong.CSharp.TestClass.Tasks
+namespace Augong.CSharp.ConsoleApp.TestClass.Tasks
 {
 	public class TaskTest : ITest
 	{
@@ -11,11 +11,11 @@ namespace Augong.CSharp.TestClass.Tasks
 			try
 			{
 				var ts = new List<Task>();
-				var task1 = Task.Factory.StartNew(() => { DoJob1(); }, TaskCreationOptions.LongRunning );
-				var task2 = Task.Factory.StartNew(() => { DoJob2(); },  TaskCreationOptions.LongRunning);
+				var task1 = Task.Factory.StartNew(() => { DoJob1(); }, TaskCreationOptions.LongRunning);
+				var task2 = Task.Factory.StartNew(() => { DoJob2(); }, TaskCreationOptions.LongRunning);
 
 				task1.ContinueWith(t => { Console.WriteLine("TASK 1 done , continue"); }).Wait();
-				var completed =  task2.Wait(1000 * 10);
+				var completed = task2.Wait(1000 * 10);
 				if (!completed)
 				{
 					cts.Cancel();

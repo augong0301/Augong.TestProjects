@@ -1,4 +1,5 @@
 ﻿#define mem
+using Augong.CSharp.ConsoleApp.BasicTests;
 using Augong.CSharp.Diagnostics;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -11,13 +12,9 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var pm = new ProcessMonitor("GazerWaferIdRead");
-		pm.DoMonitorOnAsync(20);
-
-		if (Console.ReadKey().Key.ToString() != null)
-		{
-			pm.Stop();
-		}
+		var test = new ParamsTest();
+		test.DoTest();
+		Console.ReadKey();
 	}
 
 

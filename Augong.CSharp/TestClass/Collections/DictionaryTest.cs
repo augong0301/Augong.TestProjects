@@ -1,6 +1,6 @@
 ﻿using Augong.CSharp.Contract;
 
-namespace Augong.CSharp
+namespace Augong.CSharp.ConsoleApp.TestClass.Collections
 {
 	public class DictionaryTest : ITest
 	{

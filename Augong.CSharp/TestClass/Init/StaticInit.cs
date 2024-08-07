@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Augong.CSharp.TestClass.Init
+namespace Augong.CSharp.ConsoleApp.TestClass.Init
 {
 	using System;
 	using System.Runtime.InteropServices;
@@ -21,7 +21,7 @@ namespace Augong.CSharp.TestClass.Init
 			{
 				Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 			}
-			
+
 		}
 
 		public Example()

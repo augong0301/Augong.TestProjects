@@ -1,6 +1,6 @@
 ﻿using Augong.CSharp.Contract;
 
-namespace Augong.CSharp
+namespace Augong.CSharp.ConsoleApp.LinqTest
 {
 	public class LinqType
 	{

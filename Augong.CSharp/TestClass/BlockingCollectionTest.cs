@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Augong.CSharp
+namespace Augong.CSharp.ConsoleApp.TestClass
 {
 	[MemoryDiagnoser]
 	public class BlockingCollectionTest
