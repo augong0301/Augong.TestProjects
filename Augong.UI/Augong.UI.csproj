@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<BaseOutputPath>..\WPF.Output\</BaseOutputPath>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
-    <PackageReference Include="OxyPlot.ImageSharp" Version="2.1.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+		<PackageReference Include="OxyPlot.ImageSharp" Version="2.1.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Augong,Math\Augong.Math.csproj" />
-    <ProjectReference Include="..\Augong.Util\Augong.Util.csproj" />
-    <ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
-    <ProjectReference Include="..\SocketTest\SocketTest.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Augong,Math\Augong.Math.csproj" />
+		<ProjectReference Include="..\Augong.Util\Augong.Util.csproj" />
+		<ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
+		<ProjectReference Include="..\SocketTest\SocketTest.csproj" />
+	</ItemGroup>
 
 </Project>
