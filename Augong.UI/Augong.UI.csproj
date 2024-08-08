@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Augong,Math\Augong.Math.csproj" />
     <ProjectReference Include="..\Augong.Util\Augong.Util.csproj" />
-    <ProjectReference Include="..\ProcessTest\ProcessTest.csproj" />
+    <ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
     <ProjectReference Include="..\SocketTest\SocketTest.csproj" />
   </ItemGroup>
 

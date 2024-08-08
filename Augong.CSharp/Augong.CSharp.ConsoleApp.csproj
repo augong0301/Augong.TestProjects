@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseOutputPath>..\Output\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Augong.CSharp.Contract\Augong.CSharp.Contract.csproj" />
-    <ProjectReference Include="..\ProcessTest\ProcessTest.csproj" />
+    <ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
   </ItemGroup>
 
 </Project>

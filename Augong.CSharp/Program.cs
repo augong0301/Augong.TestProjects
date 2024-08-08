@@ -1,6 +1,6 @@
 ﻿#define mem
 using Augong.CSharp.ConsoleApp.BasicTests;
-using Augong.CSharp.Diagnostics;
+using Augong.Diagnostics;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;

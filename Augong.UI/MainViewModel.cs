@@ -1,5 +1,5 @@
-﻿using Augong.CSharp.Diagnostics;
-using Augong.Math;
+﻿using Augong.Math;
+using Augong.Diagnostics;
 using Augong.Util;
 using Microsoft.Win32;
 using OxyPlot;
@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace Augong.UI
 {
-	public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler? PropertyChanged;
 
