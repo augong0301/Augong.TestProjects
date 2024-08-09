@@ -10,9 +10,9 @@
 	</PropertyGroup>
 
 	<Target Name="CustomClean" AfterTargets="Clean;Rebuild">
-		<Message Text="Deleting custom output folder... " Importance="high"/>
-		<RemoveDir Directories="$(BaseOutputPath)"/>
-		<MakeDir Directories="$(BaseOutputPath)"/>
+		<Message Text="Deleting custom output folder... " Importance="high" />
+		<RemoveDir Directories="$(BaseOutputPath)" />
+		<MakeDir Directories="$(BaseOutputPath)" />
 	</Target>
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Augong.CSharp.Contract\Augong.CSharp.Contract.csproj" />
+		<ProjectReference Include="..\Augong.NewPipe\Augong.NewPipe.csproj" />
 		<ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
 	</ItemGroup>
 
