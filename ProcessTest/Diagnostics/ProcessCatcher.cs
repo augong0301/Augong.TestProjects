@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Augong.ProcessTest.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,15 +13,18 @@ namespace Augong.ProcessTest.Diagnostics
     /// </summary>
     public class ProcessCatcher
     {
-        internal Process _process;
+        protected Process _process;
         public ProcessCatcher(string processName)
         {
             var processes = Process.GetProcessesByName(processName);
+            var ps = Process.GetProcessById(1384);
 
             if (processes.Length <= 0)
             {
-                
+                throw new ProcessException($"Process {processName} not found!");
             }
+
+            _process = processes[0];
         }
     }
 }

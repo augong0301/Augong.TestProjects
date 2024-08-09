@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Augong.ProcessTest.Exceptions
 {
-    internal class ProcessException
+    public class ProcessException : Exception
     {
+        public ProcessException() : base() { }
+        public ProcessException(string msg) : base(msg) { }
     }
 }
