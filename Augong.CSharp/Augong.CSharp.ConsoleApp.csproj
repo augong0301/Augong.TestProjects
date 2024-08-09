@@ -1,24 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <BaseOutputPath>..\Console.Output\</BaseOutputPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<BaseOutputPath>..\Output.Console\</BaseOutputPath>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-    <PackageReference Include="MemoryExtensions" Version="1.0.3" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
-  </ItemGroup>
+	<Target Name="CustomClean" AfterTargets="Clean;Rebuild">
+		<Message Text="Deleting custom output folder... " Importance="high"/>
+		<RemoveDir Directories="$(BaseOutputPath)"/>
+		<MakeDir Directories="$(BaseOutputPath)"/>
+	</Target>
+	<ItemGroup>
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
+		<PackageReference Include="MemoryExtensions" Version="1.0.3" />
+		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
+		<PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Augong.CSharp.Contract\Augong.CSharp.Contract.csproj" />
-    <ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Augong.CSharp.Contract\Augong.CSharp.Contract.csproj" />
+		<ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
+	</ItemGroup>
 
 </Project>

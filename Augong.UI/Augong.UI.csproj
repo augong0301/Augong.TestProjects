@@ -6,8 +6,14 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
-		<BaseOutputPath>..\WPF.Output\</BaseOutputPath>
+		<BaseOutputPath>..\Output.WPF\</BaseOutputPath>
 	</PropertyGroup>
+
+	<Target Name="CustomClean" AfterTargets="Clean;Rebuild">
+		<Message Text="Deleting custom output folder... " Importance="high" />
+		<RemoveDir Directories="$(BaseOutputPath)" />
+		<MakeDir Directories="$(BaseOutputPath)" />
+	</Target>
 
 	<ItemGroup>
 		<PackageReference Include="OxyPlot.Core" Version="2.1.2" />
@@ -15,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Augong,Math\Augong.Math.csproj" />
+		<ProjectReference Include="..\Augong.Math\Augong.Math.csproj" />
 		<ProjectReference Include="..\Augong.Util\Augong.Util.csproj" />
 		<ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
 		<ProjectReference Include="..\SocketTest\SocketTest.csproj" />
