@@ -1,8 +1,4 @@
 ﻿#define mem
-using Augong.CSharp.ConsoleApp.BasicTests;
-using Augong.Diagnostics;
-using Augong.NewPipe;
-using Augong.ProcessTest.Diagnostics;
 using Augong.SocketTest;
 using System.Buffers;
 using System.Buffers.Binary;

@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.NewPipe", "Augong.Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.ConsoleApp", "Augong.ConsoleApp\Augong.ConsoleApp.csproj", "{C1B7C602-09B3-4017-824A-5FF5A993CA31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.SocketEcho", "Augong.SocketEcho\Augong.SocketEcho.csproj", "{A38AB917-793E-4903-8A11-5CAF46EEBF00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{C1B7C602-09B3-4017-824A-5FF5A993CA31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1B7C602-09B3-4017-824A-5FF5A993CA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1B7C602-09B3-4017-824A-5FF5A993CA31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A38AB917-793E-4903-8A11-5CAF46EEBF00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38AB917-793E-4903-8A11-5CAF46EEBF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38AB917-793E-4903-8A11-5CAF46EEBF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38AB917-793E-4903-8A11-5CAF46EEBF00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
