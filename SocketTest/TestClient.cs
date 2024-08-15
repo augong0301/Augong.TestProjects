@@ -41,5 +41,12 @@ namespace SocketTest
 			return Encoding.UTF8.GetString(buffer);
 		}
 
+		public string GetString()
+		{
+			var str = string.Empty;
+			var bytes = new byte[1024];
+			var length = client.GetStream().Read(bytes);
+		}
+
 	}
 }
