@@ -23,11 +23,13 @@ namespace Augong.SocketEcho
 		public async void StartListener(int max)
 		{
 			Listener.Listen(max);
-
+			Console.WriteLine($"Start listening");
+			var handler = await Listener.AcceptAsync();
 			while (!cts.IsCancellationRequested)
 			{
 				var buffer = new byte[1024 * 1024];
-				var len = Listener.Receive(buffer);
+
+				var len = await handler.ReceiveAsync(buffer);
 				if (len > 0)
 				{
 					if (!IsCommand(buffer))
