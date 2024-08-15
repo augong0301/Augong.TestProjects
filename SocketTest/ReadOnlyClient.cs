@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace SocketTest
+namespace Augong.SocketTest
 {
 	public class ReadOnlyClient
 	{
@@ -49,6 +49,20 @@ namespace SocketTest
 				throw;
 			}
 			return str;
+		}
+
+		public void DoSend(string command)
+		{
+			char c = (char)0x0D;
+			command += c.ToString();
+			byte[] buffer = Encoding.ASCII.GetBytes(command);
+			client.Send(buffer);
+		}
+
+		public void DoMf()
+		{
+			var cmd = string.Format("XQ#Mfocus,{0}", 2);
+			DoSend(cmd);
 		}
 	}
 }

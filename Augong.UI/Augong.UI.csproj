@@ -24,7 +24,7 @@
 		<ProjectReference Include="..\Augong.Math\Augong.Math.csproj" />
 		<ProjectReference Include="..\Augong.Util\Augong.Util.csproj" />
 		<ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
-		<ProjectReference Include="..\SocketTest\SocketTest.csproj" />
+		<ProjectReference Include="..\SocketTest\Augong.SocketTest.csproj" />
 	</ItemGroup>
 
 </Project>

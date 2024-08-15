@@ -6,7 +6,6 @@ using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.ImageSharp;
 using OxyPlot.Series;
-using SocketTest;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,10 +13,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Augong.SocketTest;
 
 namespace Augong.UI
 {
-    public class MainViewModel : INotifyPropertyChanged
+	public class MainViewModel : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler? PropertyChanged;
 

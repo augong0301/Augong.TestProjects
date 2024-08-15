@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.CSharp.Contract", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.ProcessTest", "ProcessTest\Augong.ProcessTest.csproj", "{D5945573-D3B3-414C-A483-A67680C97077}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketTest", "SocketTest\SocketTest.csproj", "{474F2950-9FBD-4870-BF29-A54F845CE18A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.SocketTest", "SocketTest\Augong.SocketTest.csproj", "{474F2950-9FBD-4870-BF29-A54F845CE18A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.UI", "Augong.UI\Augong.UI.csproj", "{F7CF8745-E9AC-4222-B9A8-8C62573B9DCD}"
 EndProject

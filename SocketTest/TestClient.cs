@@ -1,9 +1,8 @@
-﻿
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace SocketTest
+namespace Augong.SocketTest
 {
 	public class TestClient
 	{
@@ -46,6 +45,7 @@ namespace SocketTest
 			var str = string.Empty;
 			var bytes = new byte[1024];
 			var length = client.GetStream().Read(bytes);
+			return Encoding.ASCII.GetString(bytes, 0, length);
 		}
 
 	}
