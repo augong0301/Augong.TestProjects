@@ -24,6 +24,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Augong.CSharp.Contract\Augong.CSharp.Contract.csproj" />
 		<ProjectReference Include="..\Augong.NewPipe\Augong.NewPipe.csproj" />
+		<ProjectReference Include="..\Augong.StringTest\Augong.StringTest.csproj" />
 		<ProjectReference Include="..\ProcessTest\Augong.ProcessTest.csproj" />
 		<ProjectReference Include="..\SocketTest\Augong.SocketTest.csproj" />
 	</ItemGroup>
