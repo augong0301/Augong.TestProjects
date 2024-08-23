@@ -9,7 +9,7 @@
 		<BaseOutputPath>..\Output.Console\</BaseOutputPath>
 	</PropertyGroup>
 
-	<Target Name="CustomClean" AfterTargets="Clean;Rebuild">
+	<Target Name="CustomClean" AfterTargets="Clean">
 		<Message Text="Deleting custom output folder... " Importance="high" />
 		<RemoveDir Directories="$(BaseOutputPath)" />
 		<MakeDir Directories="$(BaseOutputPath)" />

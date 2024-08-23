@@ -29,9 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.NewPipe", "Augong.Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.ConsoleApp", "Augong.ConsoleApp\Augong.ConsoleApp.csproj", "{C1B7C602-09B3-4017-824A-5FF5A993CA31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.SocketEcho", "Augong.SocketEcho\Augong.SocketEcho.csproj", "{A38AB917-793E-4903-8A11-5CAF46EEBF00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.SocketEcho", "Augong.SocketEcho\Augong.SocketEcho.csproj", "{A38AB917-793E-4903-8A11-5CAF46EEBF00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.StringTest", "Augong.StringTest\Augong.StringTest.csproj", "{1E4D0722-A793-4AE2-9EC8-0802026D4E17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.StringTest", "Augong.StringTest\Augong.StringTest.csproj", "{1E4D0722-A793-4AE2-9EC8-0802026D4E17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.FrameworkConsole", "Augong.FrameworkConsole\Augong.FrameworkConsole.csproj", "{FA3F070B-BCC1-438D-8067-1FFCDE4F98F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{1E4D0722-A793-4AE2-9EC8-0802026D4E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E4D0722-A793-4AE2-9EC8-0802026D4E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E4D0722-A793-4AE2-9EC8-0802026D4E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3F070B-BCC1-438D-8067-1FFCDE4F98F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3F070B-BCC1-438D-8067-1FFCDE4F98F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3F070B-BCC1-438D-8067-1FFCDE4F98F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3F070B-BCC1-438D-8067-1FFCDE4F98F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

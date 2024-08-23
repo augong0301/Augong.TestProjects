@@ -25,42 +25,35 @@ internal class Program
 	private static void DoReadOnlyServerTest()
 	{
 		var cl = new ReadOnlyClient();
-		var suc = cl.Connect("127.0.0.1", 3741);
-		Console.WriteLine($"suc is {suc}");
-		Console.ReadKey();
 		string input = string.Empty;
+		Console.WriteLine("ip =");
+		var ip = Console.ReadLine();
+		Console.WriteLine("address =");
+		var address = Console.ReadLine();
+		var suc = cl.Connect(ip, int.Parse(address));
+		Console.WriteLine($"Connected is {suc}");
+        Console.WriteLine("Enter your commands");
 		while (input != null)
 		{
 			input = Console.ReadLine();
-			if (input == "read")
-			{
-				for (int i = 0; i < 10; i++)
-				{
-					Console.WriteLine(cl.DoReceive());
-					Thread.Sleep(100);
-				}
-			}
-			else
-			{
-				cl.DoMf();
+			cl.DoSend(input);
 
-				bool end = false;
-				int count = 0;
-				var lines = new List<string>();
-				while (!end)
-				{
-					var rtn = cl.DoReceive();
-					count++;
-					end = rtn.Contains("MFOCUS");
-					var l = StringHelper.ResortByLine(rtn);
-					lines.AddRange(l);
-				}
-				foreach (var l in lines)
-				{
-					Console.WriteLine(l);
-				}
-				Console.WriteLine($"Receive data done by{count}");
+			bool end = false;
+			int count = 0;
+			var lines = new List<string>();
+			while (count < 3)
+			{
+				var rtn = cl.DoReceive();
+				count++;
+				end = rtn.Contains("MFOCUS");
+				var l = StringHelper.ResortByLine(rtn);
+				lines.AddRange(l);
 			}
+			foreach (var l in lines)
+			{
+				Console.WriteLine(l);
+			}
+			Console.WriteLine($"Receive data done by{count}");
 		}
 
 		Console.ReadKey();
