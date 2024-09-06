@@ -11,6 +11,18 @@ namespace Augong.FrameworkConsole
 	{
 		static void Main(string[] args)
 		{
+			var reply = Console.ReadLine();
+			while (reply != string.Empty)
+			{
+				int startIndex = reply.IndexOf("#");
+
+
+				var data = reply.Substring(startIndex + "#".Length + "1".Length);
+
+				var c = data.Substring( "WAS".Length);
+
+			}
+
 			DoReadOnlyServerTest();
 		}
 		private static void DoReadOnlyServerTest()
