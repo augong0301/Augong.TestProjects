@@ -7,12 +7,13 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
+using StringHelper = Augong.StringTest.StringHelper;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
-		DoReadOnlyServerTest();
+
 	}
 
 	private void DoStringTest()
@@ -32,7 +33,7 @@ internal class Program
 		var address = Console.ReadLine();
 		var suc = cl.Connect(ip, int.Parse(address));
 		Console.WriteLine($"Connected is {suc}");
-        Console.WriteLine("Enter your commands");
+		Console.WriteLine("Enter your commands");
 		while (input != null)
 		{
 			input = Console.ReadLine();
