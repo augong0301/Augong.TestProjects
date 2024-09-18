@@ -42,6 +42,8 @@ internal class program
 			}
 		}
 
+
+
 		Console.WriteLine("完成！");
 	}
 
@@ -56,12 +58,24 @@ internal class program
 		List<double> ys = new List<double>();
 		// 读取所有行
 		var lines = File.ReadAllLines(inputFilePath);
+		double r = 0;
+		double xPos = 0;
+		double yPos = 0;
+
+
 
 		// 创建一个 StreamWriter 用于写入输出文件
 		using (StreamWriter outputFile = new StreamWriter(outputFilePath))
 		{
 			foreach (var line in lines)
 			{
+				var bfMatch = Regex.Match(line, @"Before : Edge alignment center of wafer \(([^,]+),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*)\)");
+				if (bfMatch.Success)
+				{
+					r = double.Parse(bfMatch.Groups[1].Value);
+					xPos = double.Parse(bfMatch.Groups[2].Value);
+					yPos = double.Parse(bfMatch.Groups[3].Value);
+				}
 				// 使用正则表达式提取数据
 				var match = Regex.Match(line, @"After : Edge alignment center of wafer \(([^,]+),\s*(-?\d+\.?\d*),\s*(-?\d+\.?\d*)\)");
 
@@ -75,9 +89,9 @@ internal class program
 					}
 					var x = match.Groups[2].Value;
 					var y = match.Groups[3].Value;
-					angles.Add(double.Parse(angle));
-					xs.Add(double.Parse(x));
-					ys.Add(double.Parse(y));
+					angles.Add(double.Parse(angle) - r);
+					xs.Add(double.Parse(x) - xPos);
+					ys.Add(double.Parse(y) - yPos);
 					// 将结果写入输出文件
 					outputFile.WriteLine($"{angle}\t{x}\t{y}");
 				}
@@ -103,21 +117,16 @@ internal class program
 
 	public static void ExportUsageHist(List<double> data, string title)
 	{
-		// Define the file paths
-
-
-		// Read CPU usage data from the file
-
 		// Create a plot model
 		var plotModel = new PlotModel { Title = title };
 
-		var histogramData = GenerateHistogramData(data, 100);
+		var histogramData = GenerateHistogramData(data, 100, out double min, out double max);
 
 		// 定义区间数
 		int numberOfIntervals = 100;
 
 		// 计算区间宽度
-		double intervalWidth = (data.Max() - data.Min()) / numberOfIntervals;
+		double intervalWidth = (max - min) / numberOfIntervals;
 
 		// 初始化频数列表
 		List<int> frequency = new List<int>(new int[numberOfIntervals]);
@@ -125,37 +134,23 @@ internal class program
 		// 统计每个区间的频数
 		foreach (double value in data)
 		{
-			if (value == data.Max())
+			if (value == max)
 			{
 				frequency[numberOfIntervals - 1]++;
 			}
 			else
 			{
-				int index = (int)((value - data.Min()) / intervalWidth);
+				int index = (int)((value - min) / intervalWidth);
 				frequency[index]++;
 			}
 		}
 
-		// Create a bar series
-		var barSeries = new BarSeries
+		var axisY = new LinearAxis()
 		{
-			Title = "Value",
-			FillColor = OxyColors.SkyBlue
-		};
-
-		// Add data points to the bar series
-		foreach (var d in frequency)
-		{
-			barSeries.Items.Add(new BarItem { Value = d });
-		}
-
-		// 添加 Y 轴（类别轴）
-		plotModel.Axes.Add(new CategoryAxis
-		{
+			Key = "y",
 			Position = AxisPosition.Left,
 			Title = "Value Range",
-			ItemsSource = Enumerable.Range(0, numberOfIntervals).Select(i => $"{data.Min() + i * intervalWidth:F2} - {data.Min() + (i + 1) * intervalWidth:F2}").ToList()
-		});
+		};
 
 		// 添加 X 轴（线性轴）
 		var xAxis = new LinearAxis
@@ -167,10 +162,30 @@ internal class program
 			IntervalLength = Math.Max(1, frequency.Max() / 10.0) // 设定 x 轴的刻度间隔
 		};
 
+		// Create a bar series
+		var barSeries = new LinearBarSeries
+		{
+			Title = "Value",
+			FillColor = OxyColors.SkyBlue
+		};
+		barSeries.YAxisKey = "y";
+		barSeries.BarWidth = 10;
+		var chart = new List<ChartData>();
+		// Add data points to the bar series
+		for (int i = 0; i < histogramData.Count; i++)
+		{
+			chart.Add(new ChartData() { X = histogramData[i], Y = frequency[i] });
+		}
+		barSeries.ItemsSource = chart;
+		barSeries.DataFieldX = "X";
+		barSeries.DataFieldY = "Y";
+
 		plotModel.Background = OxyColors.White;
 
 		// Add the bar series to the plot model
 		plotModel.Series.Add(barSeries);
+		plotModel.Axes.Add(axisY);
+
 
 		string outputFilePath = Directory.GetParent(@"C:\Works\Logs\Gazer\Output").FullName;
 
@@ -182,11 +197,14 @@ internal class program
 		PngExporter.Export(plotModel, outputFilePath, 1920, 1280);
 	}
 
-	private static List<double> GenerateHistogramData(List<double> data, int binCount)
+	private static List<double> GenerateHistogramData(List<double> data, int binCount, out double min, out double max)
 	{
-		var max = data.Max();
-		var min = data.Min();
-		var range = max - min;
+		max = data.Max();
+		min = data.Min();
+		var part = (max - min) * 0.1;
+		var range = part * 14;
+		min -= part * 2;
+		max += part * 2;
 		var binSize = range / binCount;
 
 		var bins = new double[binCount];
@@ -228,4 +246,10 @@ internal class program
 		Console.WriteLine($"{title}最小值: {min}");
 		Console.WriteLine($"{title} CV: {cv}");
 	}
+}
+
+public class ChartData
+{
+	public double X { get; set; }
+	public double Y { get; set; }
 }
