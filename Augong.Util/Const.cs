@@ -13,5 +13,7 @@ namespace Augong.Util
 		public const string DoubleRegex = @"-?\d*\.\d+";
 
 		public const string OCRFolder = "OCRResults";
+
+		public const string MonitorFolder = "Monitor";
 	}
 }

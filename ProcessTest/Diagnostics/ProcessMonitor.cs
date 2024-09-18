@@ -3,6 +3,8 @@ using System.Text;
 
 namespace Augong.Diagnostics
 {
+    /* Use PerformanceCounter instead
+     */
     public class ProcessMonitor(string processName)
     {
         private CancellationTokenSource cts;
@@ -88,7 +90,7 @@ namespace Augong.Diagnostics
                 {
                     foreach (var r in records)
                     {
-                        sw.WriteLine($"CPU : {r.cpu}%, Memory {r.mem / 1024} KB");
+                        sw.WriteLine($"CPU : {r.cpu}%, Memory {r.mem / 1024 / 1024} MB");
                     }
                     sw.WriteLine($"CPU max: {maxCpu}%, Memory max {maxMem / 1024} KB");
 

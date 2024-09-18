@@ -65,7 +65,8 @@
 
 		<Button Content="Connect" Command="{Binding  DoConnectCommand}" Grid.Row="0" Grid.Column="2"  />
 		<TextBlock Text="{Binding IsConnect}" Margin="5,0,5,0" Grid.Row="0" Grid.Column="3" />
-		<Button Content="Cancel" Command="{Binding  CancelCommand}" Grid.Row="0" Grid.Column="4"  />
+		<Button Content="StopMonitor" Command="{Binding  StopCommand}" Grid.Row="0" Grid.Column="4"  />
+		<Button Content="MonitorOn" Command="{Binding  MonitorOnCommand}" Grid.Row="1" Grid.Column="4"  />
 		<Button Content="Loop" Command="{Binding  DoLoopCommand}" Grid.Row="1" Grid.Column="2"  />
 		<TextBox Text="Send Command" Grid.Row="2" Grid.Column="2"/>
 		<TextBlock Text="{Binding Commands,UpdateSourceTrigger=PropertyChanged}" MinWidth="50" Grid.Row="2" Grid.Column="3"/>

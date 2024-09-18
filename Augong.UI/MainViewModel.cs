@@ -212,11 +212,44 @@ namespace Augong.UI
 					_results.Add($"Total cost time {sw.ElapsedMilliseconds} ms, average = {(double)sw.ElapsedMilliseconds / LoopCount} ms");
 					_results.Add($"Task Done Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
 					Debug.WriteLine($"Loop {LoopCount} cost {sw.ElapsedMilliseconds} ms");
-					SaveData(freq);
+					SaveData(Path.Combine(folder,"Gazer record"));
 				}
 				CalculateAverageScore();
 			});
 
+		}
+
+
+		private ICommand _MonitorOnCommand;
+		public ICommand MonitorOnCommand => _MonitorOnCommand ??
+			(_MonitorOnCommand = new RelayCommand((o) => MonitorOn()));
+		private void MonitorOn()
+		{
+			int freq = 10;
+			var sw = Stopwatch.StartNew();
+			var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Const.MonitorFolder, DateTime.Now.ToString("HH-mm-ss"));
+			Setup(folder, LoopCount, freq);
+			cts = new CancellationTokenSource();
+			Msg = "Start";
+
+			pm = new ProcessMonitor("PolarisApp");
+			Task.Run(() =>
+			{
+				pm.DoMonitorOn(freq);
+				while(!cts.IsCancellationRequested)
+				{
+					Thread.Sleep(30);
+				}
+			}).ContinueWith(task =>
+			{
+				// 确保任务成功完成后才调用 SaveData
+				if (task.Status == TaskStatus.RanToCompletion)
+				{
+					sw.Stop();
+					Debug.WriteLine($"Stop monitor");
+					SaveData(Path.Combine(folder,"Polaris record"));
+				}
+			});
 		}
 
 		private void CalculateAverageScore()
@@ -224,12 +257,12 @@ namespace Augong.UI
 			Average = _scores.Average();
 		}
 
-		private Action<Task> SaveData(int freq)
+		private Action<Task> SaveData(string file)
 		{
 			try
 			{
-				Record(SuccessCount, freq);
-				pm.Stop(_currentResultFolder);
+				Record(file);
+				pm.Stop();
 			}
 			catch (Exception ex)
 			{
@@ -421,6 +454,16 @@ namespace Augong.UI
 			}
 		}
 
+		private ICommand _StopCommand;
+		public ICommand StopCommand => _StopCommand ??
+			(_StopCommand = new RelayCommand((o) => StopMonitor()));
+
+		private void StopMonitor()
+		{
+			pm.Stop();
+		}
+
+
 		#endregion
 
 		private void Setup(string folder, int count, int freq)
@@ -432,7 +475,7 @@ namespace Augong.UI
 		{
 			if (folder == null)
 			{
-				folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "OCRResults", DateTime.Now.ToString("HH-mm-ss") + $"Count {count} freq {freq}");
+				folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Const.MonitorFolder, DateTime.Now.ToString("HH-mm-ss") + $"Count {count} freq {freq}");
 			}
 			if (!Directory.Exists(folder))
 			{
@@ -441,9 +484,9 @@ namespace Augong.UI
 			return folder;
 		}
 
-		private void Record(int succ, int freq)
+		private void Record(string file)
 		{
-			var filePath = Path.Combine(_currentResultFolder, "OcrResult.txt");
+			var filePath = Path.Combine(file);
 
 			using (var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))
 			{
