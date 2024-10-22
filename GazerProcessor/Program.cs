@@ -41,9 +41,6 @@ internal class program
 				}
 			}
 		}
-
-
-
 		Console.WriteLine("完成！");
 	}
 
@@ -100,13 +97,6 @@ internal class program
 		Cal(angles, "angle offset");
 		Cal(xs, "x offset");
 		Cal(ys, "y offset");
-		//var aa = angles.Average();
-		//var xa = xs.Average();
-		//var ya = ys.Average();
-		//angles = angles.Select(a => a - aa).ToList();
-		//xs = xs.Select(a => a - xa).ToList();
-		//ys = ys.Select(a => a - ya).ToList();
-
 
 		ExportUsageHist(angles, "angle offset");
 		ExportUsageHist(xs, "x offset");
@@ -202,6 +192,7 @@ internal class program
 		max = data.Max();
 		min = data.Min();
 		var part = (max - min) * 0.1;
+		part = part > 0.036 ? part : 0.036;
 		var range = part * 14;
 		min -= part * 2;
 		max += part * 2;
@@ -231,6 +222,10 @@ internal class program
 		// 计算方差
 		double variance = data.Select(value => Math.Pow(value - mean, 2)).Average();
 
+		var std = Math.Sqrt(variance);
+		var lower = mean - std * 3;
+		var higher = mean + std * 3;
+
 		// 计算最大值
 		double max = data.Max();
 
@@ -245,6 +240,7 @@ internal class program
 		Console.WriteLine($"{title}最大值: {max}");
 		Console.WriteLine($"{title}最小值: {min}");
 		Console.WriteLine($"{title} CV: {cv}");
+		//Console.WriteLine($"3σ [{lower},{higher}]");
 	}
 }
 
