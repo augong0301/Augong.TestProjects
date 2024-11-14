@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GazerProcessor", "GazerProc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.ReferenceTest", "Augong.ReferenceTest\Augong.ReferenceTest.csproj", "{BC58FD7F-4857-4485-9D15-E609E6B90D8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalinfoTest", "LocalinfoTest\LocalinfoTest.csproj", "{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalinfoTest", "LocalinfoTest\LocalinfoTest.csproj", "{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Enviroments", "Enviroments", "{C4112D46-C3D4-48E9-B84C-7367857A5699}"
 	ProjectSection(SolutionItems) = preProject
@@ -130,6 +130,10 @@ Global
 		{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEEE2527-12A4-4688-A674-1421F6994563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEEE2527-12A4-4688-A674-1421F6994563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEEE2527-12A4-4688-A674-1421F6994563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEEE2527-12A4-4688-A674-1421F6994563}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
