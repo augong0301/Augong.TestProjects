@@ -1,6 +1,7 @@
 ﻿#define mem
 using Augong.SocketTest;
 using Augong.StringTest;
+using LocalinfoTest;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
@@ -13,15 +14,8 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		while (true)
-		{
-			Console.WriteLine("Wating input.....");
-			var cmd = Console.ReadLine();
-			if (cmd == null)
-				break;
-			var ascCMD = ASCIIConverter.ConvertToASCII(cmd);
-			Console.WriteLine($" {cmd} Converted to {ascCMD}");
-		}
+		var test = new LocalInfoTest();
+		test.DoTest();
 	}
 
 	private void DoStringTest()
