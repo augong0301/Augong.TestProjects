@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -67,9 +66,12 @@ namespace LocalinfoTest
 		{
 			var computer = new ComputerInfo();
 			var computerInfo = computer.GetComputerInfo();
+
 			var shaInfo = computerInfo.Select(i => mRSAHelper.GetSHA1Hash(i)).ToArray();
 
 			EnsureParentDirectory(localFilePath);
+			string currentdate = DateTime.Today.ToString("d");
+			ValidateOnPreviousTime(localFilePath);
 
 			using (StreamWriter sw = new StreamWriter(localFilePath))
 			{
@@ -77,9 +79,35 @@ namespace LocalinfoTest
 				{
 					sw.WriteLine(sha);
 				}
+				sw.WriteLine(mRSAHelper.Encrypt(currentdate));
 			}
 
 			return shaInfo;
+		}
+
+		private void ValidateOnPreviousTime(string localFilePath)
+		{
+			string localInfos;
+			using (StreamReader sr = new StreamReader(localFilePath))
+			{
+				localInfos = sr.ReadToEnd();
+
+			}
+			var localCryptos = localInfos.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+			if (localCryptos.Length < 0)
+			{
+				throw new Exception();
+			}
+
+			var dataInfo = mRSAHelper.Decrypt(localCryptos.LastOrDefault());
+			if (DateTime.TryParse(dataInfo, out var previousDate))
+			{
+				var currentdate = DateTime.Today;
+				if (currentdate < previousDate)
+				{
+					throw new Exception("System time exception: The current system time is earlier than the last startup.");
+				}
+			}
 		}
 
 		public void EnsureParentDirectory(string fileName)

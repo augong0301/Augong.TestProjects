@@ -1,24 +1,21 @@
 ﻿#define mem
-using Augong.Enum;
 using Augong.SocketTest;
 using Augong.StringTest;
+using LocalinfoTest;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
-using System.Text;
 using StringHelper = Augong.StringTest.StringHelper;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var s16 = "CE001008";
-		var d16 = Convert.ToUInt32(s16,16);
-		var ss = Enum.TryParse<FHLaserStatusCode>(d16.ToString(), false, out var sss);
-		Console.WriteLine(sss);
+		var ts = new LocalInfoTest();
+		ts.DoTest();
 	}
 
 	private void DoStringTest()
