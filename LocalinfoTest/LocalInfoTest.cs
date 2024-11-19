@@ -96,7 +96,7 @@ namespace LocalinfoTest
 		}
 
 		private readonly string mMulanRegistry = @"SOFTWARE\Mulan";
-		private readonly string mTimeStampRegName = "TimeStamp";
+		private readonly string mTimeStampRegName = "AppStatus";
 		private void ValidateOnTimeStamp()
 		{
 			var currentDate = DateTime.Today;
