@@ -1,4 +1,5 @@
 ﻿#define mem
+using Augong.ConsoleApp.BasicTests;
 using Augong.SocketTest;
 using Augong.StringTest;
 using LocalinfoTest;
