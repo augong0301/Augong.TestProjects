@@ -1,5 +1,6 @@
 ﻿#define mem
 using Augong.ConsoleApp.BasicTests;
+using Augong.ConsoleApp.LazyTest;
 using Augong.SocketTest;
 using Augong.StringTest;
 using LocalinfoTest;
@@ -16,7 +17,7 @@ internal class Program
 	private static void Main(string[] args)
 	{ 
 
-		var ts = new LocalInfoTest();
+		var ts = new LazyTest();
 		ts.DoTest();
 	}
 
