@@ -1,4 +1,6 @@
 ﻿using Augong.CSharp.Contract;
+using System;
+using System.Collections.Generic;
 
 namespace Augong.CSharp.ConsoleApp.TestClass.Collections
 {

@@ -1,4 +1,5 @@
 ﻿using Augong.CSharp.Contract;
+using System.Collections.Generic;
 
 namespace Augong.ConsoleApp.BasicTests
 {

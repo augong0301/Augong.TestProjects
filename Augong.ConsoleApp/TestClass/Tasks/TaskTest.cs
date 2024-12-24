@@ -1,4 +1,8 @@
 ﻿using Augong.CSharp.Contract;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Augong.CSharp.ConsoleApp.TestClass.Tasks
 {

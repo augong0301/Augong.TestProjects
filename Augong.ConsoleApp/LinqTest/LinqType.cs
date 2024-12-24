@@ -1,4 +1,7 @@
 ﻿using Augong.CSharp.Contract;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Augong.CSharp.ConsoleApp.LinqTest
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.IO;
+using System.IO;
 using System.IO.Compression;
-using System.Threading.Channels;
 
 namespace Augong.CSharp.ConsoleApp.TestClass
 {

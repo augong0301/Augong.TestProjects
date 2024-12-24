@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection.PortableExecutable;
+using System.Threading;
 
 namespace Augong.CSharp.ConsoleApp.TestClass.PipeTests
 {

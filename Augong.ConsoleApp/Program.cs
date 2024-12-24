@@ -1,23 +1,27 @@
 ﻿#define mem
+using Augong.ConsoleApp;
 using Augong.ConsoleApp.BasicTests;
 using Augong.ConsoleApp.LazyTest;
 using Augong.SocketTest;
 using Augong.StringTest;
 using LocalinfoTest;
+using System;
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using StringHelper = Augong.StringTest.StringHelper;
 
 internal class Program
 {
 	private static void Main(string[] args)
-	{ 
-
-		var ts = new LazyTest();
+	{
+		var ts = new AwaitVoidTest();
 		ts.DoTest();
 	}
 

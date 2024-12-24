@@ -1,4 +1,5 @@
 ﻿using Augong.CSharp.Contract;
+using System;
 namespace Augong.CSharp.ConsoleApp.BasicTests
 {
 	public class ParamsTest : ITest
