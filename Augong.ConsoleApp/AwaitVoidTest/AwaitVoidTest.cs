@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Augong.CSharp.Contract;
 
 namespace Augong.ConsoleApp
@@ -11,15 +13,22 @@ namespace Augong.ConsoleApp
 			AsyncVoidExceptions_CannotBeCaughtByCatch();
 		}
 
-		private async void ThrowExceptionAsync()
+		private async void RunSomeTask()
 		{
-			throw new InvalidOperationException();
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10000);
+			});
+			await Task.WhenAll(task);
+
+			Console.WriteLine("done task");
 		}
 		public void AsyncVoidExceptions_CannotBeCaughtByCatch()
 		{
 			try
 			{
-				ThrowExceptionAsync();
+				RunSomeTask();
+				Console.WriteLine("After some task");
 			}
 			catch (Exception ex)
 			{
