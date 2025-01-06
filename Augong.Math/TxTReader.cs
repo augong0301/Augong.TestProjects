@@ -26,7 +26,7 @@
 			return OutPut;
 		}
 
-		private List<double> ReadDoubleByLine(string filePath)
+		private List<double> ReadDoubleByLine(string filePath, int interval)
 		{
 			var cpuPercentages = new List<double>();
 			var lines = File.ReadAllLines(filePath);
@@ -42,7 +42,7 @@
 					if (cpuValue == 0)
 					{
 						zeroCount++;
-						if (zeroCount <= 2)
+						if (zeroCount <= interval)
 						{
 							cpuPercentages.Add(cpuValue);
 						}
@@ -64,11 +64,9 @@
 			return scores.Average();
 		}
 
-		public List<double> GetAllDouble(string filePath)
+		public List<double> GetAllDouble(string filePath, int interval = 2)
 		{
-			return ReadDoubleByLine(filePath);
+			return ReadDoubleByLine(filePath, interval);
 		}
-
-
 	}
 }
