@@ -14,4 +14,7 @@
 		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
 		<PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="BaseLibS" Version="1.6.4.382" />
+	</ItemGroup>
 </Project>
