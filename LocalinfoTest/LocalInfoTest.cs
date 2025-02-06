@@ -16,9 +16,10 @@ namespace LocalinfoTest
 		public void DoTest()
 		{
 
-			var localInfo = GetAndSaveLocalInfo(Path.Combine("C:\\Users\\gongx\\AppData\\Local\\PolarisApp\\Resources", "LocalInfo.key"));
+			var localInfo = GetAndSaveLocalInfo(Path.Combine("C:\\Users\\gongx\\AppData\\Local\\Andromeda\\Resources", "LocalInfo.key"));
 			var t = DateTime.Now;
-			var startupInfoFile = Path.Combine("C:\\Users\\gongx\\AppData\\Local\\PolarisApp\\Resources", "StartupInfo.key");
+			//var startupInfoFile = Path.Combine("C:\\Users\\gongx\\AppData\\Local\\PolarisApp\\Resources", "StartupInfo.key");
+			var startupInfoFile = Path.Combine("C:\\Users\\gongx\\AppData\\Local\\Andromeda\\Resources", "StartupInfo.key");
 			DecryptAndValidate(startupInfoFile, localInfo);
 
 		}
