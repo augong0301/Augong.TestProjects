@@ -37,8 +37,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.FrameworkConsole", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GazerProcessor", "GazerProcessor\GazerProcessor.csproj", "{254FC6F2-0871-4AFF-91F7-9B6CC439080D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.ReferenceTest", "Augong.ReferenceTest\Augong.ReferenceTest.csproj", "{BC58FD7F-4857-4485-9D15-E609E6B90D8D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalinfoTest", "LocalinfoTest\LocalinfoTest.csproj", "{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Enviroments", "Enviroments", "{C4112D46-C3D4-48E9-B84C-7367857A5699}"
@@ -52,7 +50,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.WCF", "Augong.WCF\Au
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCRMotorTest", "OCRMotorTest\OCRMotorTest.csproj", "{69845448-FCA8-4A06-877B-135A6865B0BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenCatcher", "ScreenCatcher\ScreenCatcher.csproj", "{BAD1F556-C6F7-40AD-A516-5B8E8DC26447}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenCatcher", "ScreenCatcher\ScreenCatcher.csproj", "{BAD1F556-C6F7-40AD-A516-5B8E8DC26447}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.TxtReader", "Augong.TxtReader\Augong.TxtReader.csproj", "{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,10 +128,6 @@ Global
 		{254FC6F2-0871-4AFF-91F7-9B6CC439080D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{254FC6F2-0871-4AFF-91F7-9B6CC439080D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{254FC6F2-0871-4AFF-91F7-9B6CC439080D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC58FD7F-4857-4485-9D15-E609E6B90D8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC58FD7F-4857-4485-9D15-E609E6B90D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC58FD7F-4857-4485-9D15-E609E6B90D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC58FD7F-4857-4485-9D15-E609E6B90D8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79FB8E52-50A7-4BA8-83C8-2C8C84F5B4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -152,6 +148,10 @@ Global
 		{BAD1F556-C6F7-40AD-A516-5B8E8DC26447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAD1F556-C6F7-40AD-A516-5B8E8DC26447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAD1F556-C6F7-40AD-A516-5B8E8DC26447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

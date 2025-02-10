@@ -1,10 +1,10 @@
 ﻿namespace Augong.Math
 {
-	public class TxTReader
+	public class PerformanceReader
 	{
 
 		private string _filePath;
-		public TxTReader(string filePath)
+		public PerformanceReader(string filePath)
 		{
 			_filePath = filePath;
 		}

@@ -323,7 +323,7 @@ namespace Augong.UI
 				_txtPath = sd.FileName;
 			}
 
-			var reader = new TxTReader(_txtPath);
+			var reader = new PerformanceReader(_txtPath);
 
 			// Read CPU usage data from the file
 			var cpuPercentages = reader.GetAllDouble(_txtPath);
@@ -422,7 +422,7 @@ namespace Augong.UI
 				_txtPath = sd.FileName;
 			}
 
-			var reader = new TxTReader(_txtPath);
+			var reader = new PerformanceReader(_txtPath);
 
 			// Read CPU usage data from the file
 			var cpuPercentages = reader.GetAllDouble(_txtPath);

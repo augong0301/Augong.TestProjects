@@ -58,11 +58,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Augong.WCF\Augong.WCF.csproj">
-      <Project>{a22aa24d-bba5-4214-a3e9-06d087f93002}</Project>
-      <Name>Augong.WCF</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
