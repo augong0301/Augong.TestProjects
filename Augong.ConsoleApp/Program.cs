@@ -2,6 +2,7 @@
 using Augong.ConsoleApp;
 using Augong.ConsoleApp.BasicTests;
 using Augong.ConsoleApp.LazyTest;
+using Augong.ConsoleApp.TestClass.XmlIncludeTest;
 using Augong.SocketTest;
 using Augong.StringTest;
 using LocalinfoTest;
@@ -11,19 +12,43 @@ using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using StringHelper = Augong.StringTest.StringHelper;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var t = ((100 % 360) + 360) % 360;
-        Console.WriteLine($" -380 % 360 = {t}");
-		Console.ReadKey();
+		// 序列化
+		var animal = new Dog { Name = "Buddy", Breed = "Golden Retriever" };
+		var serializer = new XmlSerializer(typeof(Dog));
+		using (var writer = new StringWriter())
+		{
+			serializer.Serialize(writer, animal);
+			string xml = writer.ToString();
+			Console.WriteLine(xml);
+		}
+
+		string xmlContent = @"<Zoo xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+                               xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+                                <Animal xsi:type='Dog'>
+                                    <Name>Buddy</Name>
+                                    <Breed>Golden Retriever</Breed>
+                                </Animal>
+                              </Zoo>";
+		using (var reader = new StringReader(xmlContent))
+		{
+			var deserializedZoo = serializer.Deserialize(reader);
+			if (deserializedZoo is Dog dog)
+			{
+				Console.WriteLine($"Dog: {dog.Name}, Breed: {dog.Breed}");
+			}
+		}
 	}
 
 	private void DoStringTest()
