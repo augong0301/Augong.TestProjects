@@ -24,6 +24,7 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
+		var T = new Byte[] { 0x01, 0x03, 0x00, 0x0E, 0x00, 0x08, 0x25, 0xCF }.ToString(); Console.WriteLine(T);
 		// 序列化
 		var animal = new Dog { Name = "Buddy", Breed = "Golden Retriever" };
 		var serializer = new XmlSerializer(typeof(Dog));

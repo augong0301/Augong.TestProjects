@@ -14,7 +14,6 @@ namespace Augong.FrameworkConsole
     {
         static void Main(string[] args)
         {
-            var sc = new ServiceHosting();
 
 
 
