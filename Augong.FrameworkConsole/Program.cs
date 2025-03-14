@@ -14,17 +14,22 @@ namespace Augong.FrameworkConsole
     {
         static void Main(string[] args)
         {
-            var s = new SomeHelper();
-            var rst = s.DoSomething("ccccc");
-            var c= JsonConvert.SerializeObject(rst);
 
-            var assembly = Assembly.GetExecutingAssembly();
-            var referencedAssemblies = assembly.GetReferencedAssemblies();
 
-            foreach (var referencedAssembly in referencedAssemblies)
-            {
-                Console.WriteLine($"\tReferenced Assembly: {referencedAssembly.Name}, Version: {referencedAssembly.Version}");
-            }
+
+
+
+            //var s = new SomeHelper();
+            //var rst = s.DoSomething("ccccc");
+            //var c= JsonConvert.SerializeObject(rst);
+
+            //var assembly = Assembly.GetExecutingAssembly();
+            //var referencedAssemblies = assembly.GetReferencedAssemblies();
+
+            //foreach (var referencedAssembly in referencedAssemblies)
+            //{
+            //    Console.WriteLine($"\tReferenced Assembly: {referencedAssembly.Name}, Version: {referencedAssembly.Version}");
+            //}
         }
         private static void DoReadOnlyServerTest()
         {

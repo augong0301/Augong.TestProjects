@@ -4,12 +4,100 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime;
+using System.Threading;
 using System.Threading.Tasks;
 
 class Program
 {
+	private static CLAHE mCLAHE = CLAHE.Create(5);
 	private static bool isMeanMode = false;
 	static void Main(string[] args)
+	{
+		MatTest();
+	}
+
+
+	private static void Dotest()
+	{
+		int total = 0;
+		while (!int.TryParse(Console.ReadLine(), out total))
+		{
+
+		}
+		int count = 0;
+		while (count < total)
+		{
+			try
+			{
+				var file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test", "ThumbnailImage.png");
+				Mat mat = Cv2.ImRead(file, ImreadModes.AnyDepth);
+				var mat1 = new Mat(mat, new Range(0, mat.Rows), new Range(0, mat.Cols));
+
+				Mat matOptimized = new Mat(mat.Rows, mat.Cols, mat.Type());
+				mCLAHE.ClipLimit = 2.0;
+				mCLAHE.Apply(mat1, matOptimized);
+				mat1.Dispose();
+				mat.Dispose();
+				Console.WriteLine($"mat disposed, count = {count}");
+				count++;
+			}
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.StackTrace);
+				Console.WriteLine(ex);
+			}
+		}
+		Console.WriteLine("Press to exit");
+		Console.ReadLine();
+	}
+	private static void MatTest()
+	{
+		int total = 0;
+		while (!int.TryParse(Console.ReadLine(), out total))
+		{
+
+		}
+		int count = 0;
+		while (count < total)
+		{
+			try
+			{
+
+				Mat submat;
+				using (Mat parent = new Mat(100, 100, MatType.CV_8UC1))
+				{
+					submat = parent[new Range(0, 50), new Range(0, 50)];
+				}
+				Mat matOptimized = new Mat(submat.Rows, submat.Cols, submat.Type());
+				mCLAHE.Apply(submat, matOptimized);
+				submat.Dispose();
+
+
+
+				var file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test", "ThumbnailImage.png");
+				Mat mat = Cv2.ImRead(file, ImreadModes.AnyDepth);
+
+				//Mat matOptimized = new Mat(mat.Rows, mat.Cols, mat.Type());
+				mCLAHE.Apply(mat, matOptimized);
+				mat = matOptimized[new Rect(0, 0, 2000, 2000)];
+				mat.Dispose();
+				Console.WriteLine($"mat disposed, count = {count}");
+				count++;
+			}
+			catch (Exception ex)
+			{
+
+				Console.WriteLine(ex.StackTrace);
+				Console.WriteLine(ex);
+			}
+		}
+		Console.WriteLine("Press to exit");
+		Console.ReadLine();
+	}
+
+	private static void DoMerge()
 	{
 		Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "start merging");
 
@@ -81,6 +169,8 @@ class Program
 			}
 
 		}
+
+
 	}
 
 	private static void MergeChannels(string outputPath, string[] selChannels, double[] ratios)

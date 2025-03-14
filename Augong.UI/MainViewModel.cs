@@ -27,7 +27,7 @@ namespace Augong.UI
 		}
 
 		#region props
-		private string _IP = "127.0.0.1";
+		private string _IP = "192.168.1.100";
 
 		public string IP
 		{
@@ -39,7 +39,7 @@ namespace Augong.UI
 			}
 		}
 
-		private int _port = 7789;
+		private int _port = 7790;
 
 		public int Port
 		{
@@ -212,7 +212,7 @@ namespace Augong.UI
 					_results.Add($"Total cost time {sw.ElapsedMilliseconds} ms, average = {(double)sw.ElapsedMilliseconds / LoopCount} ms");
 					_results.Add($"Task Done Succ {SuccessCount} freq {freq} Percent {(double)SuccessCount / (double)LoopCount * 100}%");
 					Debug.WriteLine($"Loop {LoopCount} cost {sw.ElapsedMilliseconds} ms");
-					SaveData(Path.Combine(folder,"Gazer record"));
+					SaveData(Path.Combine(folder, "Gazer record"));
 				}
 				CalculateAverageScore();
 			});
@@ -232,11 +232,11 @@ namespace Augong.UI
 			cts = new CancellationTokenSource();
 			Msg = "Start";
 
-			pm = new ProcessMonitor("PolarisApp");
+			pm = new ProcessMonitor("GazerWaferIdRead");
 			Task.Run(() =>
 			{
 				pm.DoMonitorOn(freq);
-				while(!cts.IsCancellationRequested)
+				while (!cts.IsCancellationRequested)
 				{
 					Thread.Sleep(30);
 				}
@@ -247,7 +247,7 @@ namespace Augong.UI
 				{
 					sw.Stop();
 					Debug.WriteLine($"Stop monitor");
-					SaveData(Path.Combine(folder,"Polaris record"));
+					SaveData(Path.Combine(folder, "Polaris record"));
 				}
 			});
 		}
@@ -301,8 +301,8 @@ namespace Augong.UI
 				_txtPath = sd.FileName;
 			}
 
-			var reader = new TxTReader(_txtPath);
-			Average = reader.Average();
+			//var reader = new TxTReader(_txtPath);
+			//Average = reader.Average();
 		}
 
 		private ICommand _GetAverageCommand;
@@ -323,10 +323,11 @@ namespace Augong.UI
 				_txtPath = sd.FileName;
 			}
 
-			var reader = new TxTReader(_txtPath);
+			var reader = new PerformanceReader(_txtPath);
 
 			// Read CPU usage data from the file
 			var cpuPercentages = reader.GetAllDouble(_txtPath);
+			var max = cpuPercentages.Max();
 
 			// Create a plot model
 			var plotModel = new PlotModel { Title = "CPU Usage" };
@@ -356,7 +357,7 @@ namespace Augong.UI
 			{
 				Position = AxisPosition.Left,
 				Key = "CategoryAxis",
-				Title = "CPU % Range"
+				Title = "CPU %"
 			});
 			plotModel.Background = OxyColors.White;
 
@@ -364,9 +365,49 @@ namespace Augong.UI
 			plotModel.Series.Add(barSeries);
 
 
+			var lineSeries = new LineSeries
+			{
+				Title = "CPU % Line",
+				Color = OxyColors.Red, // Set line color
+				StrokeThickness = 2,   // Set line thickness
+				MarkerType = MarkerType.Circle,  // Set marker type for points
+				MarkerSize = 4         // Set marker size
+			};
+
+
+			var allPercents = reader.GetAllDouble(_txtPath, 30);
+
+			for (int i = 0; i < allPercents.Count; i++)
+			{
+				lineSeries.Points.Add(new DataPoint(i, allPercents[i]));
+			}
+
+
+			var plotModelLine = new PlotModel { Title = "CPU Usage" };
+			plotModelLine.Background = OxyColors.White;
+
+			plotModelLine.Axes.Add(new LinearAxis()
+			{
+				Position = AxisPosition.Bottom,
+				Title = "Test time"
+			});
+
+			plotModelLine.Axes.Add(new CategoryAxis
+			{
+				Position = AxisPosition.Left,
+				Key = "CategoryAxis",
+				Title = "CPU %",
+				Minimum = 0,
+				Maximum = 100,
+				MajorStep = 5,
+				LabelFormatter = value => (value/100).ToString("0%") 
+			});
+			plotModelLine.Series.Add(lineSeries);
+
 			string outputFilePath = Directory.GetParent(_txtPath).FullName;
 
 			ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
+			ExportToPng(plotModelLine, Path.Combine(outputFilePath, "UsageLine.png"));
 		}
 		private void ExportUsage()
 		{
@@ -381,7 +422,7 @@ namespace Augong.UI
 				_txtPath = sd.FileName;
 			}
 
-			var reader = new TxTReader(_txtPath);
+			var reader = new PerformanceReader(_txtPath);
 
 			// Read CPU usage data from the file
 			var cpuPercentages = reader.GetAllDouble(_txtPath);
@@ -419,8 +460,8 @@ namespace Augong.UI
 
 		private List<double> GenerateHistogramData(List<double> data, int binCount)
 		{
-			var max = data.Max();
-			var min = data.Min();
+			var max = 100;
+			var min = 0;
 			var range = max - min;
 			var binSize = range / binCount;
 
