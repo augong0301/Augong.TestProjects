@@ -1,36 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
-namespace Augong.ConsoleApp.TestClass.XmlIncludeTest
+namespace Augong.ConsoleApp
 {
-	internal class XmlIncludeTest
-	{
-	}
 
-	public interface IAnimal
-	{
-		string Name { get; set; }
-	}
 
-	public class Dog : IAnimal
+	[XmlRoot("SerializableInterface"), Serializable]
+	public class SerializableInterface<TInterface> : IXmlSerializable
 	{
-		public string Name { get; set; }
-		public string Breed { get; set; }
-	}
+		public TInterface Source { get { return (TInterface)mSource; } }
+		string mTypeName;
+		object mSource;
 
-	public class Cat : IAnimal
-	{
-		public string Name { get; set; }
-		public int Lives { get; set; }
-	}
 
-	[XmlRoot("Zoo")]
-	[XmlInclude(typeof(Dog)), XmlInclude(typeof(Cat))] 
-	public class Animal
-	{
+		public SerializableInterface()
+		{
+
+		}
+
+		public SerializableInterface(object interfaceObj)
+		{
+			this.mSource = interfaceObj;
+			mTypeName = mSource.GetType().FullName;
+		}
+
+		public System.Xml.Schema.XmlSchema GetSchema()
+		{
+			return null;
+		}
+
+		public void ReadXml(XmlReader reader)
+		{
+			var typeSer = new XmlSerializer(typeof(string));
+			bool wasEmpty = reader.IsEmptyElement;
+			reader.Read();
+
+			if (wasEmpty)
+				return;
+			while (reader.NodeType != XmlNodeType.EndElement)
+			{
+				reader.ReadStartElement("Type");
+				mTypeName = typeSer.Deserialize(reader) as string;
+
+				reader.ReadEndElement();
+
+				var sourceSer = new XmlSerializer(Type.GetType(mTypeName));
+				reader.ReadStartElement("Object");
+				mSource = sourceSer.Deserialize(reader);
+				reader.ReadEndElement();
+				reader.MoveToContent();
+			}
+			reader.ReadEndElement();
+		}
+
+		public void WriteXml(XmlWriter writer)
+		{
+			var typeSer = new XmlSerializer(typeof(string));
+			var sourceSer = new XmlSerializer(mSource.GetType());
+
+			writer.WriteStartElement("Type");
+			typeSer.Serialize(writer, mTypeName);
+			writer.WriteEndElement();
+			writer.WriteStartElement("Object");
+			sourceSer.Serialize(writer, mSource);
+			writer.WriteEndElement();
+		}
 	}
 }
