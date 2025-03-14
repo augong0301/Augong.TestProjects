@@ -52,7 +52,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OCRMotorTest", "OCRMotorTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenCatcher", "ScreenCatcher\ScreenCatcher.csproj", "{BAD1F556-C6F7-40AD-A516-5B8E8DC26447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.TxtReader", "Augong.TxtReader\Augong.TxtReader.csproj", "{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.TxtReader", "Augong.TxtReader\Augong.TxtReader.csproj", "{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVWpf", "OpenCVWpf\OpenCVWpf.csproj", "{75A7DC22-9BC7-43A5-8D94-FDB5D95DDD80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +154,10 @@ Global
 		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B9AC192-DC30-4A9F-9D37-450DE1E73BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75A7DC22-9BC7-43A5-8D94-FDB5D95DDD80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75A7DC22-9BC7-43A5-8D94-FDB5D95DDD80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75A7DC22-9BC7-43A5-8D94-FDB5D95DDD80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75A7DC22-9BC7-43A5-8D94-FDB5D95DDD80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
