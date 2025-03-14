@@ -1,11 +1,6 @@
 ﻿#define mem
-using Augong.ConsoleApp;
-using Augong.ConsoleApp.BasicTests;
-using Augong.ConsoleApp.LazyTest;
-using Augong.ConsoleApp.TestClass.XmlIncludeTest;
 using Augong.SocketTest;
 using Augong.StringTest;
-using LocalinfoTest;
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -24,32 +19,7 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		var T = new Byte[] { 0x01, 0x03, 0x00, 0x0E, 0x00, 0x08, 0x25, 0xCF }.ToString(); Console.WriteLine(T);
-		// 序列化
-		var animal = new Dog { Name = "Buddy", Breed = "Golden Retriever" };
-		var serializer = new XmlSerializer(typeof(Dog));
-		using (var writer = new StringWriter())
-		{
-			serializer.Serialize(writer, animal);
-			string xml = writer.ToString();
-			Console.WriteLine(xml);
-		}
 
-		string xmlContent = @"<Zoo xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
-                               xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
-                                <Animal xsi:type='Dog'>
-                                    <Name>Buddy</Name>
-                                    <Breed>Golden Retriever</Breed>
-                                </Animal>
-                              </Zoo>";
-		using (var reader = new StringReader(xmlContent))
-		{
-			var deserializedZoo = serializer.Deserialize(reader);
-			if (deserializedZoo is Dog dog)
-			{
-				Console.WriteLine($"Dog: {dog.Name}, Breed: {dog.Breed}");
-			}
-		}
 	}
 
 	private void DoStringTest()
