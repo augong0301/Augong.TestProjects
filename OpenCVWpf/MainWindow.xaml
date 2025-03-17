@@ -6,7 +6,14 @@
         xmlns:local="clr-namespace:OpenCVWpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
 		<Button Content="test" Width="100" Height="30" Click="StartTest_Click"/>
+		<Image Source="Bitmap" MaxHeight="1080" MaxWidth="1920">
+			
+		</Image>
 	</Grid>
 </Window>
