@@ -1,5 +1,6 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime;
@@ -17,13 +18,14 @@ namespace OpenCVWpf
 		public MainWindow()
 		{
 			InitializeComponent();
+			this.DataContext = new MainViewModel();
 		}
 
 		public BitmapSource Bitmap { get; set; }
 
 		private async void StartTest_Click(object sender, RoutedEventArgs e)
 		{
-			await Task.Run(() => TestSubMatrix());
+			await Task.Run(() => TestConcurrentDictionary());
 		}
 
 		private void TestCLAHE()
@@ -40,6 +42,8 @@ namespace OpenCVWpf
 					Thread.Sleep(10);
 					clahe.ClipLimit = limit;
 					clahe.Apply(src, dst);
+					GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+					GC.Collect(2);
 					Debug.WriteLine($"Applied CLAHE {i + 1} times of {limit} ClipLimit");
 				}
 			}
@@ -71,14 +75,53 @@ namespace OpenCVWpf
 					var c = subMat.Cols;
 					var r = subMat.Rows;
 					Debug.WriteLine($"subMat : cols {c} rows {r}");
-					GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-					GC.Collect(2);
 				}
 				catch (Exception ex)
 				{
 					Debug.WriteLine($"Exception caught: {ex.Message}");
 				}
 			}
+		}
+
+		private void TestConcurrentDictionary()
+		{
+			var dict = new ConcurrentDictionary<int, byte[]>();
+			for (int i = 0; i < 10000; i++)
+			{
+				var bytes = new byte[1024 * 10];
+				dict.TryAdd(i, bytes);
+			}
+			var sw = Stopwatch.StartNew();
+
+			for (int i = 0; i < 10000; i++)
+			{
+				dict.TryRemove(i, out var _);
+			}
+
+			sw.Stop();
+			Debug.WriteLine($"dict.TryRemove(i, out var _); cost {sw.ElapsedTicks}ms");
+
+
+
+			var byteCollection = new Dictionary<int, byte[]>();
+
+			for (int i = 0; i < 10000; i++)
+			{
+				var bytes = new byte[1024 * 10];
+				byteCollection.Add(i, bytes);
+				dict.TryAdd(i, bytes);
+			}
+			var kvPairs = byteCollection.Select(c => KeyValuePair.Create(c.Key, c.Value)).ToArray();
+			sw.Restart();
+
+			for (int i = 0; i < 10000; i++)
+			{
+				dict.TryRemove(kvPairs[i]);
+			}
+
+			sw.Stop();
+			Debug.WriteLine($"dict.TryRemove(kvPair); cost {sw.ElapsedTicks}ms");
+
 		}
 	}
 }

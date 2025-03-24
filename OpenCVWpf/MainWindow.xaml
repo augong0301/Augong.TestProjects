@@ -8,12 +8,12 @@
         Title="MainWindow" Height="450" Width="800">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<Button Content="test" Width="100" Height="30" Click="StartTest_Click"/>
-		<Image Source="Bitmap" MaxHeight="1080" MaxWidth="1920">
-			
+		<Image Source="{Binding Image}" MaxHeight="1080" MaxWidth="1920">
+
 		</Image>
 	</Grid>
 </Window>
