@@ -1,6 +1,7 @@
 ﻿#define mem
 using Augong.SocketTest;
 using Augong.StringTest;
+using LocalinfoTest;
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -19,7 +20,8 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-
+		LocalInfoTest test = new LocalInfoTest();
+		test.DoTest();
 	}
 
 	private void DoStringTest()
