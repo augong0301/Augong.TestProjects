@@ -56,7 +56,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.TxtReader", "Augong.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCVWpf", "OpenCVWpf\OpenCVWpf.csproj", "{75A7DC22-9BC7-43A5-8D94-FDB5D95DDD80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.TestProjects", "WPF.TestProjects\WPF.TestProjects.csproj", "{35E7B4B9-2328-4367-87CE-44E78F04330D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF.TestProjects", "WPF.TestProjects\WPF.TestProjects.csproj", "{35E7B4B9-2328-4367-87CE-44E78F04330D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Augong.WPFTests", "Augong.WPFTests\Augong.WPFTests.csproj", "{7030AD69-4C17-4A80-992F-4402441FAF65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -164,6 +166,10 @@ Global
 		{35E7B4B9-2328-4367-87CE-44E78F04330D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35E7B4B9-2328-4367-87CE-44E78F04330D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35E7B4B9-2328-4367-87CE-44E78F04330D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7030AD69-4C17-4A80-992F-4402441FAF65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7030AD69-4C17-4A80-992F-4402441FAF65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7030AD69-4C17-4A80-992F-4402441FAF65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7030AD69-4C17-4A80-992F-4402441FAF65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
