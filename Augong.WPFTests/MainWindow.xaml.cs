@@ -1,14 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Augong.WPFTests
 {
@@ -20,9 +11,33 @@ namespace Augong.WPFTests
 		public MainWindow()
 		{
 			InitializeComponent();
-			this.Loaded += (s, e) => Debug.WriteLine("Loaded");
-			this.ContentRendered += (s, e) => Debug.WriteLine("ContentRendered");
-			this.ShowDialog();
+		}
+
+		private Mutex mutex = new Mutex(false);
+
+		private void LoopBtnClick(object sender, RoutedEventArgs e)
+		{
+			Task.Run(() =>
+			{
+				while (true)
+				{
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						var window = new CustomWindow();
+						window.ShowDialog();
+					});
+				}
+
+			});
+
+			//Task.Run(() =>
+			//{
+			//	while (true)
+			//	{
+			//		Thread.Sleep(1000);
+			//		var process = Process.GetProcesses().FirstOrDefault(c => c.ProcessName.Contains("AUGONG",StringComparison.InvariantCultureIgnoreCase));
+			//	}
+			//});
 		}
 	}
 }

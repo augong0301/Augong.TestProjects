@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xaml.Behaviors;
 using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using System.Windows;
 using System.Windows.Interop;
-using static Mulan.Platform.Patterns.Wpf.Win32Api;
+using static Augong.WPFTests.CustomWindowViewModel;
+using static Augong.WPFTests.Win32Api;
 using WpfUserControl = System.Windows.Controls;
 
-namespace Mulan.Platform.Patterns.Wpf
+namespace Augong.WPFTests
 {
 	public class CustomWindowBehavior : Behavior<Window>
 	{
@@ -16,8 +15,6 @@ namespace Mulan.Platform.Patterns.Wpf
 		{
 			public double Left, Top, Width, Height;
 		}
-
-		private const string TypeName = "MulanCustomWindow";
 
 		private double mScreenRatio = 1.0;
 		private double mInitialWidth;
@@ -88,6 +85,9 @@ namespace Mulan.Platform.Patterns.Wpf
 			}
 
 			AssociatedObject.SizeChanged += AssociatedObject_SizeChanged;
+			Debug.WriteLine("AssociatedObject_ContentRendered");
+			Thread.Sleep(1000);
+			AssociatedObject.Close();
 		}
 
 		private void ButtonClose_CanCloseChanged(object sender, EventArgs e)
@@ -167,6 +167,7 @@ namespace Mulan.Platform.Patterns.Wpf
 			{
 				throw new InvalidOperationException($"Window {sender.ToString()} hwndSource is null"); ;
 			}
+			Debug.WriteLine("AssociatedObject_SourceInitialized");
 		}
 
 		private void LocationCenterScreen()
@@ -255,6 +256,7 @@ namespace Mulan.Platform.Patterns.Wpf
 
 			Graphics graphics = Graphics.FromHwnd(IntPtr.Zero);
 			mScreenRatio = (double)(graphics.DpiX * 1.041666667) / 100;
+			Debug.WriteLine("AssociatedObject_Initialized");
 		}
 	}
 
@@ -321,7 +323,8 @@ namespace Mulan.Platform.Patterns.Wpf
 	public class MulanMessageWindowData
 	{
 		public object ElementInfo { get; set; }
-
+		public FocusElement FocusElementControl { get; set; } = FocusElement.Ok;
+		public DefaultElement DefaultElementControl { get; set; } = DefaultElement.None;
 		public string WindowAutomationID { get; set; } = string.Empty;
 		public Type ResourceType { get; set; }
 		public string Title { get; set; }
