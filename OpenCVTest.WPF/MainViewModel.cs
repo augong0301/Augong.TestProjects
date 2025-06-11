@@ -100,13 +100,44 @@ namespace OpenCVTest.WPF
 
 			Cv2.ImWrite(Path.Combine(mFolder, "canny.png"), canny);
 
+			float[,] kernelX = { { 1f, 0f, -1f }, { 2f, 0f, -2f }, { 1f, 0f, -1f } }; // 水平梯度
+			float[,] kernelY = { { 1f, 2f, 1f }, { 0f, 0f, 0f }, { -1f, -2f, -1f } }; // 垂直梯度
+
+			// 3. 正确创建Mat对象（通过Mat.FromArray）
+			Mat sobelX = Mat.FromArray(kernelX);
+			Mat sobelY = Mat.FromArray(kernelY);
+
+			// 4. 计算梯度
+			Mat gx = new Mat(), gy = new Mat();
+			Cv2.Filter2D(mOriginMat, gx, MatType.CV_32F, sobelX);
+			Cv2.Filter2D(mOriginMat, gy, MatType.CV_32F, sobelY);
+
+			// 5. 合并梯度：G = sqrt(Gx² + Gy²)
+			Mat gxSquared = new Mat(), gySquared = new Mat(), sumSquared = new Mat();
+			Cv2.Pow(gx, 2, gxSquared);
+			Cv2.Pow(gy, 2, gySquared);
+			Cv2.Add(gxSquared, gySquared, sumSquared);
+			Mat edges = new Mat();
+			Cv2.Sqrt(sumSquared, edges);
+
+			// 6. 转换为8位图像（与ImageJ一致）
+			edges.ConvertTo(edges, MatType.CV_8U);
+			Cv2.ImWrite(Path.Combine(mFolder, $"edges1.png"), edges);
+
+
+
 
 			using var contourImage = blur.Clone();
-			Cv2.FindContours(mOriginMat, out Point[][] contours, out HierarchyIndex[] hierarchy,
+
+			Cv2.FindContours(edges, out Point[][] contours, out HierarchyIndex[] hierarchy,
 							RetrievalModes.List, ContourApproximationModes.ApproxNone);
+			int count = 0;
 			foreach (var contour in contours)
 			{
 				Cv2.DrawContours(contourImage, contours, Array.IndexOf(contours, contour), Scalar.White, thickness: 1);
+				Cv2.ImWrite(Path.Combine(mFolder, $"counterImage_{count}.png"), contourImage);
+				count++;
+
 			}
 			Cv2.ImWrite(Path.Combine(mFolder, $"counterImage.png"), contourImage);
 			//Cv2.ImWrite(Path.Combine(mFolder, "lines.png"), resultMat);
