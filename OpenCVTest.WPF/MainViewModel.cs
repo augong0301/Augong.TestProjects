@@ -92,33 +92,21 @@ namespace OpenCVTest.WPF
 		private void PerformEdgeDection()
 		{
 			LoadDefaultImage(FileName);
-			using var blur = new Mat(mOriginMat.Size(), mOriginMat.Type());
+			using var blur = new Mat(mOriginMat.Size(), mOriginMat.Type(), Scalar.Black);
 			using var canny = new Mat(mOriginMat.Size(), mOriginMat.Type());
 			using var binary = new Mat(mOriginMat.Size(), mOriginMat.Type());
 
-			Cv2.GaussianBlur(mOriginMat, blur, new Size(3, 3), 0.8);
+			Cv2.Canny(mOriginMat, canny, 50, 150);
 
-			var kernal = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(5, 5));
-			Cv2.MorphologyEx(blur, blur, MorphTypes.Open, kernal);
-			Cv2.MorphologyEx(blur, blur, MorphTypes.Close, kernal);
-
-
-
-			//Cv2.Threshold(blur, binary, 127, 255, ThresholdTypes.Binary);
-			Cv2.Canny(blur, canny, 50, 150);
-
-			Cv2.ImWrite(Path.Combine(mFolder, "blur.png"), blur);
 			Cv2.ImWrite(Path.Combine(mFolder, "canny.png"), canny);
-			Cv2.ImWrite(Path.Combine(mFolder, "binary.png"), binary);
 
 
 			using var contourImage = blur.Clone();
-			Cv2.FindContours(canny, out Point[][] contours, out HierarchyIndex[] hierarchy,
-							RetrievalModes.List, ContourApproximationModes.ApproxSimple);
+			Cv2.FindContours(mOriginMat, out Point[][] contours, out HierarchyIndex[] hierarchy,
+							RetrievalModes.List, ContourApproximationModes.ApproxNone);
 			foreach (var contour in contours)
 			{
-				Cv2.DrawContours(contourImage, contours, Array.IndexOf(contours, contour), new Scalar(0, 0, 255), thickness: 3);
-
+				Cv2.DrawContours(contourImage, contours, Array.IndexOf(contours, contour), Scalar.White, thickness: 1);
 			}
 			Cv2.ImWrite(Path.Combine(mFolder, $"counterImage.png"), contourImage);
 			//Cv2.ImWrite(Path.Combine(mFolder, "lines.png"), resultMat);
