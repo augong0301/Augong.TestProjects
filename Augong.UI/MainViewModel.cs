@@ -14,6 +14,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Augong.SocketTest;
+using System;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Augong.UI
 {
