@@ -60,9 +60,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF.TestProjects", "WPF.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Augong.WPFTests", "Augong.WPFTests\Augong.WPFTests.csproj", "{7030AD69-4C17-4A80-992F-4402441FAF65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVTest.WPF", "OpenCVTest.WPF\OpenCVTest.WPF.csproj", "{5DF412ED-D521-4421-BEF3-9F311068B446}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCVTest.WPF", "OpenCVTest.WPF\OpenCVTest.WPF.csproj", "{5DF412ED-D521-4421-BEF3-9F311068B446}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Utitlities", "UI.Utitlities\UI.Utitlities.csproj", "{FB863A70-1AB2-49A8-B0D1-2F973CF09FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.Utitlities", "UI.Utitlities\UI.Utitlities.csproj", "{FB863A70-1AB2-49A8-B0D1-2F973CF09FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NugetHelper", "NugetHelper\NugetHelper.csproj", "{99E84522-BBD4-426B-92F8-19D93B59B098}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -182,6 +184,10 @@ Global
 		{FB863A70-1AB2-49A8-B0D1-2F973CF09FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB863A70-1AB2-49A8-B0D1-2F973CF09FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB863A70-1AB2-49A8-B0D1-2F973CF09FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E84522-BBD4-426B-92F8-19D93B59B098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E84522-BBD4-426B-92F8-19D93B59B098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E84522-BBD4-426B-92F8-19D93B59B098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E84522-BBD4-426B-92F8-19D93B59B098}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
