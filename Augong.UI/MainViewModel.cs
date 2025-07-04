@@ -32,7 +32,7 @@ namespace Augong.UI
 		}
 
 		#region props
-		private string _IP = "192.168.1.100";
+		private string _IP = "123_456_78";
 
 		public string IP
 		{
@@ -94,7 +94,7 @@ namespace Augong.UI
 			set { _msg = value; this.NotifyChanged(); }
 		}
 
-		private string _isConnect = "Offline";
+		private string _isConnect = "123_456_78";
 
 		public string IsConnect
 		{
@@ -118,6 +118,22 @@ namespace Augong.UI
 			set { _Signals = value; this.NotifyChanged(); }
 		}
 
+		private int _SelectedItem = 1;
+
+		public int SelectedItem
+		{
+			get { return _SelectedItem; }
+			set { _SelectedItem = value; this.NotifyChanged(); }
+		}
+
+
+		private string[] _AvailableItems = ["BF_G","BF_R","BF_B","DF"];
+
+		public string[] AvailableItems
+		{
+			get { return _AvailableItems; }
+			set { _AvailableItems = value; this.NotifyChanged(); }
+		}
 
 		#endregion
 
@@ -405,7 +421,7 @@ namespace Augong.UI
 				Minimum = 0,
 				Maximum = 100,
 				MajorStep = 5,
-				LabelFormatter = value => (value/100).ToString("0%") 
+				LabelFormatter = value => (value / 100).ToString("0%")
 			});
 			plotModelLine.Series.Add(lineSeries);
 

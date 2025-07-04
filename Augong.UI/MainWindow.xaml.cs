@@ -29,5 +29,5 @@ namespace Augong.UI
 			main.OnExit();
 		}
 
-	}
+    }
 }
