@@ -2,12 +2,28 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 namespace Augong.TxtReader
 {
 	internal class Program
 	{
 		static void Main(string[] args)
+		{
+			Console.WriteLine("输入读取的json路径");
+			var jsonPath = string.IsNullOrEmpty(Console.ReadLine()) ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "8inch_10pcs_LOT_20250624_153318", "defects.json") : "";
+
+			var jstr = File.ReadAllText(jsonPath);
+
+			var data = JsonSerializer.Deserialize<List<DefectInfo>>(jstr);
+			var micropipe = data.Where(d => d.DefectType == 11 && !d.IsExcluded).ToList();
+			var paticle = data.Where(d => d.DefectType == 15 && !d.IsExcluded).ToList();
+			var all = data.Where(d =>!d.IsExcluded).ToList();
+
+
+			Console.ReadLine();
+		}
+		static void Main12(string[] args)
 		{
 			string logData = @"
   1132,102: 2025-04-02 18:07:06.298 <Trace      > [FocusTrain]YPosition[mm] 50 FocusIlluminate 100 FocusRPM 1000 FocusPosition 5338.35

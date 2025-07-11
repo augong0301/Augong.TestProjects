@@ -76,7 +76,7 @@
 		<!--<TextBlock Text="{Binding Msg}" Grid.Row="4" Grid.Column="3"  />-->
 
 
-		<ComboBox ItemsSource="{Binding AvailableItems}" SelectedItem="{Binding SelectedItem, Converter=}" Margin="5">
+		<!--<ComboBox ItemsSource="{Binding AvailableItems}" SelectedItem="{Binding SelectedItem, Converter=}" Margin="5">
 			<ComboBox.Resources>
 				<ControlTemplate x:Key="CustomComboBoxToggleButton" TargetType="ToggleButton">
 					<Border 
@@ -153,6 +153,6 @@
 					</Grid>
 				</ControlTemplate>
 			</ComboBox.Template>
-		</ComboBox>
+		</ComboBox>-->
 	</Grid>
 </Window>
