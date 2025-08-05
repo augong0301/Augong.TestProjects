@@ -1,24 +1,27 @@
-﻿using Augong.Math;
-using Augong.Diagnostics;
+﻿using Augong.Diagnostics;
+using Augong.SocketTest;
 using Augong.Util;
 using Microsoft.Win32;
 using OxyPlot;
-using OxyPlot.Axes;
 using OxyPlot.ImageSharp;
-using OxyPlot.Series;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
-using Augong.SocketTest;
-using System;
-using System.Threading.Tasks;
 using System.Threading;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Augong.UI
 {
@@ -127,13 +130,23 @@ namespace Augong.UI
 		}
 
 
-		private string[] _AvailableItems = ["BF_G","BF_R","BF_B","DF"];
+		private string[] _AvailableItems = ["BF_G", "BF_R", "BF_B", "DF"];
 
 		public string[] AvailableItems
 		{
 			get { return _AvailableItems; }
 			set { _AvailableItems = value; this.NotifyChanged(); }
 		}
+
+
+		private DrawingGroup drawingGroup = new DrawingGroup();
+
+		public DrawingGroup DrawingGroup
+		{
+			get { return drawingGroup; }
+			set { drawingGroup = value; NotifyChanged(); }
+		}
+
 
 		#endregion
 
@@ -149,7 +162,94 @@ namespace Augong.UI
 
 		public MainViewModel()
 		{
-			_client = new TestClient();
+			//_client = new TestClient();
+			var bitmap = new Bitmap(800, 800, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+			var images = DrawBitmaps(1, DrawDieInIntegerField);
+			DrawingGroup dg;
+			dg = BuildDrawingGroup(images);
+
+			DrawingGroup.Children.Add(dg);
+		}
+
+		private void DrawDieInIntegerField(Graphics g, int start, int end)
+		{
+			using System.Drawing.Pen Tpen = new System.Drawing.Pen(System.Drawing.Color.Red, 1);
+
+			g.DrawRectangle(Tpen, new RectangleF(200, 200, 200, 200));
+
+		}
+
+		protected DrawingGroup BuildDrawingGroup(IEnumerable<Bitmap> images)
+		{
+			var dg = new DrawingGroup();
+			dg.ClipGeometry = new RectangleGeometry(new System.Windows.Rect(0, 0, 800, 800));
+
+			using (var dc = dg.Open())
+			{
+				var rotatedGroup = new DrawingGroup();
+				Transform(rotatedGroup);
+				using (var innerDc = rotatedGroup.Open()) // setup a inner layer to transform before clip
+				{
+					innerDc.DrawGeometry(System.Windows.Media.Brushes.Transparent, new System.Windows.Media.Pen(System.Windows.Media.Brushes.Purple, 1), BuildTestEllipse());
+				}
+				dc.DrawDrawing(rotatedGroup);
+				rotatedGroup.Freeze();
+			}
+
+			dg.Opacity = 0.5;
+			dg.Freeze();
+
+			return dg;
+		}
+		private GeometryGroup BuildTestEllipse()
+		{
+			GeometryGroup geometryGroup = new GeometryGroup();
+
+			var testRect = new RectangleGeometry(new Rect(200, 200, 200, 200));
+			geometryGroup.Children.Add(testRect);
+			return geometryGroup;
+		}
+
+		protected virtual void Transform(DrawingGroup drawing)
+		{ }
+
+		protected virtual ConcurrentBag<Bitmap> DrawBitmaps(int totalCount, Action<Graphics, int, int> draw)
+		{
+			var images = new ConcurrentBag<Bitmap>();
+
+			var sgmIndexPair = new List<(int start, int end)>();
+			int sgmLen = Math.Max(1000, (int)Math.Ceiling(totalCount / mSgmCount));
+			int sgmCount = (int)Math.Ceiling((double)totalCount / (double)sgmLen);
+
+			for (int i = 0; i < sgmCount; i++)
+			{
+				if ((i + 1) * sgmLen >= totalCount)
+				{
+					sgmIndexPair.Add((i * sgmLen, totalCount));
+					break;
+				}
+
+				sgmIndexPair.Add((i * sgmLen, (i + 1) * sgmLen));
+			}
+
+			Parallel.ForEach(sgmIndexPair, index =>
+			{
+				var bitmap = new Bitmap(800, 800, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+				using (var g = Graphics.FromImage(bitmap))
+				{
+					g.Clear(System.Drawing.Color.Transparent);
+					g.CompositingQuality = CompositingQuality.HighQuality;
+					g.InterpolationMode = InterpolationMode.HighQualityBilinear;
+					g.SmoothingMode = SmoothingMode.HighQuality;
+					draw(g, index.start, index.end);
+				}
+
+				images.Add(bitmap);
+			});
+
+			return images;
 		}
 
 		#region commands
@@ -326,153 +426,153 @@ namespace Augong.UI
 			//Average = reader.Average();
 		}
 
-		private ICommand _GetAverageCommand;
-		public ICommand GetAverageCommand => _GetAverageCommand ??
-			(_GetAverageCommand = new RelayCommand((o) => ExportUsageHist()));
+		//private ICommand _GetAverageCommand;
+		//public ICommand GetAverageCommand => _GetAverageCommand ??
+		//	(_GetAverageCommand = new RelayCommand((o) => ExportUsageHist()));
 
 
-		private void ExportUsageHist()
-		{
-			// Define the file paths
-			var sd = new OpenFileDialog();
-			sd.FileName = "Documents";
-			sd.DefaultExt = ".txt";
-			sd.Filter = "Text documents (.txt)|*.txt";
-			var rs = sd.ShowDialog();
-			if (rs == true)
-			{
-				_txtPath = sd.FileName;
-			}
+		//private void ExportUsageHist()
+		//{
+		//	// Define the file paths
+		//	var sd = new OpenFileDialog();
+		//	sd.FileName = "Documents";
+		//	sd.DefaultExt = ".txt";
+		//	sd.Filter = "Text documents (.txt)|*.txt";
+		//	var rs = sd.ShowDialog();
+		//	if (rs == true)
+		//	{
+		//		_txtPath = sd.FileName;
+		//	}
 
-			var reader = new PerformanceReader(_txtPath);
+		//	var reader = new PerformanceReader(_txtPath);
 
-			// Read CPU usage data from the file
-			var cpuPercentages = reader.GetAllDouble(_txtPath);
-			var max = cpuPercentages.Max();
+		//	// Read CPU usage data from the file
+		//	var cpuPercentages = reader.GetAllDouble(_txtPath);
+		//	var max = cpuPercentages.Max();
 
-			// Create a plot model
-			var plotModel = new PlotModel { Title = "CPU Usage" };
+		//	// Create a plot model
+		//	var plotModel = new PlotModel { Title = "CPU Usage" };
 
-			var histogramData = GenerateHistogramData(cpuPercentages, 100);
+		//	var histogramData = GenerateHistogramData(cpuPercentages, 100);
 
-			// Create a bar series
-			var barSeries = new BarSeries
-			{
-				Title = "CPU %",
-				FillColor = OxyColors.SkyBlue
-			};
+		//	// Create a bar series
+		//	var barSeries = new BarSeries
+		//	{
+		//		Title = "CPU %",
+		//		FillColor = OxyColors.SkyBlue
+		//	};
 
-			// Add data points to the bar series
-			foreach (var data in histogramData)
-			{
-				barSeries.Items.Add(new BarItem { Value = data });
-			}
+		//	// Add data points to the bar series
+		//	foreach (var data in histogramData)
+		//	{
+		//		barSeries.Items.Add(new BarItem { Value = data });
+		//	}
 
-			// Add axes
-			plotModel.Axes.Add(new LinearAxis
-			{
-				Position = AxisPosition.Bottom,
-				Title = "Frequency"
-			});
-			plotModel.Axes.Add(new CategoryAxis
-			{
-				Position = AxisPosition.Left,
-				Key = "CategoryAxis",
-				Title = "CPU %"
-			});
-			plotModel.Background = OxyColors.White;
+		//	// Add axes
+		//	plotModel.Axes.Add(new LinearAxis
+		//	{
+		//		Position = AxisPosition.Bottom,
+		//		Title = "Frequency"
+		//	});
+		//	plotModel.Axes.Add(new CategoryAxis
+		//	{
+		//		Position = AxisPosition.Left,
+		//		Key = "CategoryAxis",
+		//		Title = "CPU %"
+		//	});
+		//	plotModel.Background = OxyColors.White;
 
-			// Add the bar series to the plot model
-			plotModel.Series.Add(barSeries);
-
-
-			var lineSeries = new LineSeries
-			{
-				Title = "CPU % Line",
-				Color = OxyColors.Red, // Set line color
-				StrokeThickness = 2,   // Set line thickness
-				MarkerType = MarkerType.Circle,  // Set marker type for points
-				MarkerSize = 4         // Set marker size
-			};
+		//	// Add the bar series to the plot model
+		//	plotModel.Series.Add(barSeries);
 
 
-			var allPercents = reader.GetAllDouble(_txtPath, 30);
+		//	var lineSeries = new LineSeries
+		//	{
+		//		Title = "CPU % Line",
+		//		Color = OxyColors.Red, // Set line color
+		//		StrokeThickness = 2,   // Set line thickness
+		//		MarkerType = MarkerType.Circle,  // Set marker type for points
+		//		MarkerSize = 4         // Set marker size
+		//	};
 
-			for (int i = 0; i < allPercents.Count; i++)
-			{
-				lineSeries.Points.Add(new DataPoint(i, allPercents[i]));
-			}
+
+		//	var allPercents = reader.GetAllDouble(_txtPath, 30);
+
+		//	for (int i = 0; i < allPercents.Count; i++)
+		//	{
+		//		lineSeries.Points.Add(new DataPoint(i, allPercents[i]));
+		//	}
 
 
-			var plotModelLine = new PlotModel { Title = "CPU Usage" };
-			plotModelLine.Background = OxyColors.White;
+		//	var plotModelLine = new PlotModel { Title = "CPU Usage" };
+		//	plotModelLine.Background = OxyColors.White;
 
-			plotModelLine.Axes.Add(new LinearAxis()
-			{
-				Position = AxisPosition.Bottom,
-				Title = "Test time"
-			});
+		//	plotModelLine.Axes.Add(new LinearAxis()
+		//	{
+		//		Position = AxisPosition.Bottom,
+		//		Title = "Test time"
+		//	});
 
-			plotModelLine.Axes.Add(new CategoryAxis
-			{
-				Position = AxisPosition.Left,
-				Key = "CategoryAxis",
-				Title = "CPU %",
-				Minimum = 0,
-				Maximum = 100,
-				MajorStep = 5,
-				LabelFormatter = value => (value / 100).ToString("0%")
-			});
-			plotModelLine.Series.Add(lineSeries);
+		//	plotModelLine.Axes.Add(new CategoryAxis
+		//	{
+		//		Position = AxisPosition.Left,
+		//		Key = "CategoryAxis",
+		//		Title = "CPU %",
+		//		Minimum = 0,
+		//		Maximum = 100,
+		//		MajorStep = 5,
+		//		LabelFormatter = value => (value / 100).ToString("0%")
+		//	});
+		//	plotModelLine.Series.Add(lineSeries);
 
-			string outputFilePath = Directory.GetParent(_txtPath).FullName;
+		//	string outputFilePath = Directory.GetParent(_txtPath).FullName;
 
-			ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
-			ExportToPng(plotModelLine, Path.Combine(outputFilePath, "UsageLine.png"));
-		}
-		private void ExportUsage()
-		{
-			// Define the file paths
-			var sd = new OpenFileDialog();
-			sd.FileName = "Documents";
-			sd.DefaultExt = ".txt";
-			sd.Filter = "Text documents (.txt)|*.txt";
-			var rs = sd.ShowDialog();
-			if (rs == true)
-			{
-				_txtPath = sd.FileName;
-			}
+		//	ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
+		//	ExportToPng(plotModelLine, Path.Combine(outputFilePath, "UsageLine.png"));
+		//}
+		//private void ExportUsage()
+		//{
+		//	// Define the file paths
+		//	var sd = new OpenFileDialog();
+		//	sd.FileName = "Documents";
+		//	sd.DefaultExt = ".txt";
+		//	sd.Filter = "Text documents (.txt)|*.txt";
+		//	var rs = sd.ShowDialog();
+		//	if (rs == true)
+		//	{
+		//		_txtPath = sd.FileName;
+		//	}
 
-			var reader = new PerformanceReader(_txtPath);
+		//	var reader = new PerformanceReader(_txtPath);
 
-			// Read CPU usage data from the file
-			var cpuPercentages = reader.GetAllDouble(_txtPath);
+		//	// Read CPU usage data from the file
+		//	var cpuPercentages = reader.GetAllDouble(_txtPath);
 
-			// Create a plot model
-			var plotModel = new PlotModel { Title = "CPU Usage" };
+		//	// Create a plot model
+		//	var plotModel = new PlotModel { Title = "CPU Usage" };
 
-			// Create a line series
-			var lineSeries = new LineSeries
-			{
-				Title = "CPU %",
-				MarkerType = MarkerType.Circle,
-				MarkerSize = 4,
-				MarkerStroke = OxyColors.White
-			};
+		//	// Create a line series
+		//	var lineSeries = new LineSeries
+		//	{
+		//		Title = "CPU %",
+		//		MarkerType = MarkerType.Circle,
+		//		MarkerSize = 4,
+		//		MarkerStroke = OxyColors.White
+		//	};
 
-			// Add data points to the line series
-			for (int i = 0; i < cpuPercentages.Count; i++)
-			{
-				lineSeries.Points.Add(new DataPoint(i, cpuPercentages[i]));
-			}
+		//	// Add data points to the line series
+		//	for (int i = 0; i < cpuPercentages.Count; i++)
+		//	{
+		//		lineSeries.Points.Add(new DataPoint(i, cpuPercentages[i]));
+		//	}
 
-			// Add the line series to the plot model
-			plotModel.Series.Add(lineSeries);
-			string outputFilePath = Directory.GetParent(_txtPath).FullName;
+		//	// Add the line series to the plot model
+		//	plotModel.Series.Add(lineSeries);
+		//	string outputFilePath = Directory.GetParent(_txtPath).FullName;
 
-			// Export the plot model to a PNG file
-			ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
-		}
+		//	// Export the plot model to a PNG file
+		//	ExportToPng(plotModel, Path.Combine(outputFilePath, "Usage.png"));
+		//}
 
 		private void ExportToPng(PlotModel plotModel, string outputFilePath)
 		{
@@ -517,6 +617,8 @@ namespace Augong.UI
 		}
 
 		private ICommand _StopCommand;
+		private double mSgmCount;
+
 		public ICommand StopCommand => _StopCommand ??
 			(_StopCommand = new RelayCommand((o) => StopMonitor()));
 

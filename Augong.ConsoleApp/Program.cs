@@ -1,6 +1,7 @@
 ﻿#define mem
 using Augong.SocketTest;
 using Augong.StringTest;
+using BenchmarkDotNet.Columns;
 using LocalinfoTest;
 using System;
 using System.Buffers;
@@ -11,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipelines;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -20,93 +22,98 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		LocalInfoTest test = new LocalInfoTest();
-		test.DoTest();
+		Test();
 	}
 
-	private void DoStringTest()
+	private static void Test()
 	{
-		var st = new StringTester();
-		st.DoTest();
-		Console.ReadKey();
-	}
+		string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "output_wafermap.wp");
+		var sb = new StringBuilder();
 
-	private static void DoReadOnlyServerTest()
-	{
-		var cl = new ReadOnlyClient();
-		string input = string.Empty;
-		Console.WriteLine("ip =");
-		var ip = Console.ReadLine();
-		Console.WriteLine("address =");
-		var address = Console.ReadLine();
-		var suc = cl.Connect(ip, int.Parse(address));
-		Console.WriteLine($"Connected is {suc}");
-		Console.WriteLine("Enter your commands");
-		while (input != null)
+		// [Info] 区段
+		sb.AppendLine("[Info]");
+		sb.AppendLine("Type=WaferMap");
+		sb.AppendLine("Version=1.0");
+		sb.AppendLine("Date=" + DateTime.Now.ToString("yyyy-M-d HH:mm:ss"));
+		sb.AppendLine();
+
+		// [WaferConfig] 区段
+		sb.AppendLine("[WaferConfig]");
+		int diameter = 150;
+		int dieLimit = 90000;
+		int rowCount = 160; // 行数
+		int colCount = 160; // 列数
+		int defaultRowValue = 240;
+		int defaultColValue = 240;
+
+		sb.AppendLine($"Diemeter={diameter}");
+		sb.AppendLine($"DieLimit={dieLimit}");
+		sb.AppendLine($"RowCount={rowCount}");
+		sb.AppendLine($"ColCount={colCount}");
+
+		// 输出Row
+		for (int i = 0; i < rowCount; i++)
+			sb.AppendLine($"Row{i}={defaultRowValue}");
+
+		// 输出Col
+		for (int i = 0; i < colCount; i++)
+			sb.AppendLine($"Col{i}={defaultColValue}");
+
+		sb.AppendLine();
+		var rand = new Random();
+
+		var zeroRegion = GenerateZeroRegion();
+		// [Dies] 区段
+		sb.AppendLine("[Dies]");
+
+		for (int row = 0; row < rowCount; row++)
 		{
-			input = Console.ReadLine();
-			cl.DoSend(input);
-
-			bool end = false;
-			int count = 0;
-			var lines = new List<string>();
-			while (count < 3)
+			for (int col = 0; col < colCount; col++)
 			{
-				var rtn = cl.DoReceive();
-				count++;
-				end = rtn.Contains("MFOCUS");
-				var l = StringHelper.ResortByLine(rtn);
-				lines.AddRange(l);
+				if (row < 2 || row >= rowCount - 2 || col < 2 || col >= colCount - 2 || zeroRegion.Contains((row, col)))
+				{
+					sb.AppendLine($"Die{row:D4}{col:D4}=0");
+				}
+				else
+				{
+					int dieValue = rand.Next(1, 8); // 1~8
+					sb.AppendLine($"Die{row:D4}{col:D4}={dieValue}");
+				}
 			}
-			foreach (var l in lines)
-			{
-				Console.WriteLine(l);
-			}
-			Console.WriteLine($"Receive data done by{count}");
 		}
 
-		Console.ReadKey();
+		File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+		Console.WriteLine("文件已生成: " + filePath);
 	}
 
-	private static void DoMemTest()
+	private static List<(int row, int col)> GenerateZeroRegion()
 	{
-
-
-		var dictionary = new ConcurrentDictionary<int, byte[]>();
-		for (int i = 0; i < 1024 * 5; i++)
+		var result = new List<(int row, int col)>();
+		var rows = new List<int>();
+		var cols = new List<int>();
+		int rowSt = 17;
+		int colSt = 31;
+		for (int i = rowSt; i < 160; i += 30)
 		{
-			var data = new byte[1024 * 1024];
-			dictionary.TryAdd(i, data);
+			rows.Add(i);
+			rows.Add(i + 1);
+			rows.Add(i + 2);
 		}
 
-		for (int i = 0; i < 1024; i++)
+		for (int i = colSt; i < 160; i += 30)
 		{
-			dictionary.TryRemove(i, out _);
+			cols.Add(i);
+			cols.Add(i + 1);
 		}
 
-
-		// 当引用结束时，largeData数组仍然存在，直到它不再被引用并被垃圾回收
-		Console.ReadKey();
-		dictionary.Clear();
-		dictionary = null;
-		dictionary = new ConcurrentDictionary<int, byte[]>();
-
-		//var origin = new Dictionary<int, byte[]>();
-		//for (int i = 0; i < 1024; i++)
-		//{
-		//	var data = new byte[1024 * 1024];
-		//	origin.TryAdd(i, data);
-		//}
-
-		//for (int i = 0; i < 1024; i++)
-		//{
-		//	origin.Remove(i, out _);
-		//}
-		//Console.ReadKey();
-		//origin.Clear();
-		Console.ReadKey();
-
-
+		foreach (var row in rows)
+		{
+			foreach (var col in cols)
+			{
+				result.Add((row, col));
+			}
+		}
+		return result;
 	}
 
 	private static void DoTest(long p = 1024 * 1024 * 10, long r = 1024 * 1024 * 5, int minimumSegmentSize = 1024 * 1024)
